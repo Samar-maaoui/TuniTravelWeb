@@ -1,0 +1,173 @@
+{% extends 'baseclient.html.twig' %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ parent() }}
+    <style>
+        .reservations-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0;
+            background-color: rgba(10, 26, 47, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--gold);
+            padding: 0;
+            background-color: rgba(10, 26, 47, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--gold);
+        }
+
+        .reservations-header {
+            background: var(--dark-blue);
+            padding: 20px;
+            color: var(--white);
+            background: var(--dark-blue);
+            padding: 20px;
+            color: var(--white);
+            text-align: center;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .reservations-header h2 {
+            color: var(--gold);
+            margin: 0;
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--gold);
+        }
+
+        .reservations-header h2 {
+            color: var(--gold);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .reservation-item {
+            padding: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--white);
+        }
+
+        .reservation-item:last-child {
+            border-bottom: none;
+            padding: 20px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--white);
+        }
+
+        .reservation-item:last-child {
+            border-bottom: none;
+        }
+
+        .reservation-details {
+            margin-bottom: 15px;
+        }
+
+        .reservation-details strong {
+            color: var(--gold);
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .reservation-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .reservation-details strong {
+            color: var(--gold);
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .reservation-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .reservation-actions a {
+            padding: 6px 12px;
+            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-size: 0.9rem;
+        }
+
+        .edit-link {
+            background-color: var(--gold);
+            color: var(--dark-blue);
+        }
+
+        .edit-link:hover {
+            background-color: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+        }
+
+        .delete-link {
+            background-color: transparent;
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+
+        .delete-link:hover {
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .no-reservations {
+            padding: 30px;
+            text-align: center;
+            color: var(--white);
+        }
+        .pdf-link {
+    background-color: #2c3e50;
+    color: white;
+    border: 1px solid #2c3e50;
+}
+
+.pdf-link:hover {
+    background-color: transparent;
+    color: #2c3e50;
+}
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="reservations-container">
+        <div class="reservations-header">
+            <h2>Mes Réservations Hôtels</h2>
+        </div>
+
+        {% if reservations|length > 0 %}
+            {% for res in reservations %}
+                <div class="reservation-item">
+                    <div class="reservation-details">
+                        <div><strong>Hôtel:</strong> {{ res.hotel.nom }}</div>
+                        <div><strong>Dates:</strong> Du {{ res.checkInDate|date('d/m/Y') }} au {{ res.checkOutDate|date('d/m/Y') }}</div>
+                        <div><strong>Type de chambre:</strong> {{ res.typeChambre }}</div>
+                        <div><strong>Prix total:</strong> {{ res.prixTotal }} TND</div>
+                       
+                    </div>
+                    <div class="reservation-actions">
+                        <a href="{{ path('modifier_reservation', {'id': res.idReservation}) }}" class="edit-link">Modifier</a>
+                        <a href="{{ path('supprimer_reservation', {'id': res.idReservation}) }}" class="delete-link" onclick="return confirm('Supprimer cette réservation ?');">Supprimer</a>
+                        <a href="{{ path('reservation_pdf', {'id': res.idReservation}) }}" class="pdf-link">Exporter PDF</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-reservations">
+                <p>Aucune réservation trouvée.</p>
+            </div>
+            <div class="no-reservations">
+                <p>Aucune réservation trouvée.</p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

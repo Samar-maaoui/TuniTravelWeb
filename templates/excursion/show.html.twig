@@ -1,0 +1,90 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Excursion</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id_excursion</th>
+                <td>{{ excursion.getIdExcursion }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ excursion.nom }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ excursion.lieu }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ excursion.prix }}</td>
+            </tr>
+            <tr>
+                <th>Date_depart</th>
+                <td>{{ excursion.dateDepart ? excursion.dateDepart|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Date_retour</th>
+                <td>{{ excursion.dateRetour ? excursion.dateRetour|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ excursion.description }}</td>
+            </tr>
+            <tr>
+                <th>Nombre_max_participants</th>
+                <td>{{ excursion.nombreMaxParticipants }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td>{{ excursion.image }}</td>
+            </tr>
+            <tr>
+                <th>LieuDepart</th>
+                <td>{{ excursion.villeDepart }}</td>
+            </tr>
+            <tr>
+                <th>NomGuide</th>
+                <td>{{ excursion.guide.nom }}</td>
+            </tr>
+            <tr>
+                <th>NbPlaces</th>
+                <td>{{ excursion.nombreMaxParticipants }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Reservations</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id Reservation</th>
+                <th>Excursion</th>
+                <th>Guide</th>
+                <th>Nombre de Places Reservées</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+            <tr>
+                <td>{{ reservation.tilisateur.nom }}</td>
+                <td>{{ reservation.dateReservation|date('Y-m-d H:i') }}</td>
+                <td>{{ reservation.statut }}</td>
+                <td>{{ reservation.montantTotal }} TND</td>
+            </tr>
+        {% else %}
+                <tr>
+                    <td colspan="4">Aucune réservation pour cette excursion</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_excursion_index') }}">Back to list</a>
+
+    <a href="{{ path('app_excursion_edit', {'id_excursion': excursion.getIdExcursion}) }}">Edit</a>
+
+    {{ include('excursion/_delete_form.html.twig') }}
+{% endblock %}

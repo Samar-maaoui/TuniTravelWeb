@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques des Réservations{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-color: #0a1a2f;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .stat-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+        .btn-dashboard {
+            display: inline-block;
+            margin: 1rem;
+            padding: 10px 20px;
+            background-color: #1e3a8a;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-dashboard:hover {
+            background-color: #142e66;
+        }
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+    </style>
+
+    <a href="{{ path('app_dashboard') }}" class="btn-dashboard">← Retour au dashboard</a>
+
+    <div class="stat-container">
+        <h2>📊 Statistiques des réservations par excursion 📊</h2>
+        <canvas id="reservationChart" height="120"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('reservationChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ labels|raw }},
+                datasets: [{
+                    label: 'Nombre de réservations',
+                    data: {{ data|raw }},
+                    backgroundColor: [
+                        'rgba(30, 58, 138, 0.7)',
+                        'rgba(212, 175, 55, 0.7)',
+                        'rgba(10, 26, 47, 0.7)',
+                        'rgba(184, 134, 11, 0.7)',
+                        'rgba(3, 18, 27, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(30, 58, 138, 1)',
+                        'rgba(212, 175, 55, 1)',
+                        'rgba(10, 26, 47, 1)',
+                        'rgba(184, 134, 11, 1)',
+                        'rgb(4, 37, 59)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e3a8a',
+                        titleColor: '#fff',
+                        bodyColor: '#fff'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            color: '#1e3a8a',
+                            font: { size: 14 }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#1e3a8a',
+                            font: { size: 13 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

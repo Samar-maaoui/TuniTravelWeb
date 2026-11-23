@@ -1,0 +1,46 @@
+body {
+    background-color: skyblue;
+}
+.auth-button {
+    position: relative;
+    display: inline-block;
+    padding: 8px 16px;
+    margin-left: 10px;
+    color: white;
+    background-color: #3498db;
+    border-radius: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    border: none;
+}
+
+.auth-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 0;
+}
+
+.auth-button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.auth-button:active::before {
+    transform: translate(-50%, -50%) scale(1);
+    transition: 0s;
+}
+
+.auth-button:active {
+    transform: scale(0.98);
+}

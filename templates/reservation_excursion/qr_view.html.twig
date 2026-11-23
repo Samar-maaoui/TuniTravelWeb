@@ -1,0 +1,39 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block body %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 2rem;
+    background-color: #1E3A8A;
+  }
+  img {
+    margin: 1rem 0;
+  }
+  .btn {
+    display: inline-block;
+    padding: .5rem 1rem;
+    background: rgba(184, 134, 11, 0.8);
+    color: #fff;
+    text-decoration: none;
+    border-radius: .25rem;
+  }
+  .label {
+    color: rgba(184, 134, 11, 0.8);
+  }
+  .btn:hover {
+    background: rgba(184, 134, 11, 1);
+  }
+  .notif {
+    color: #dc3545;
+  }
+</style>
+
+<h1 class="label">Votre réservation est réalisée avec succès !</h1>
+<p class="notif">Un email de confirmation vous a été envoyé</p>
+<br>
+<p class="label"><strong>Voici votre billet électronique</strong></p>
+<img src="{{ path('reservation_qr', { id: reservation.getIdReservation }) }}" alt="QR Code Réservation" width="300" height="300" />
+<br>
+{% endblock %}

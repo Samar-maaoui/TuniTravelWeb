@@ -1,0 +1,59 @@
+
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Détails Réservation</h1>
+
+    <table class="table">
+        <tbody>
+                <tr>
+                      <th>Nom & Prénom</th>
+                         <td>{{ reservationpackvoyage.utilisateur.nom }} {{ reservationpackvoyage.utilisateur.prenom }}</td>
+                            </tr>
+                        <tr>
+                        <th>Email</th>
+                    <td>{{ reservationpackvoyage.utilisateur.email }}</td>
+                                </tr>
+
+            <tr>
+                <th>Date</th>
+                <td>{{ reservationpackvoyage.dateReservation ? reservationpackvoyage.dateReservation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ reservationpackvoyage.statut }}</td>
+            </tr>
+            <tr>
+                <th>Paiement</th>
+                <td>{{ reservationpackvoyage.statutPaiement }}</td>
+            </tr>
+          
+            <tr>
+                <th>Places</th>
+                <td>{{ reservationpackvoyage.placesDemandees }}</td>
+            </tr>
+            <tr>
+                <th>Montant</th>
+                <td>{{ reservationpackvoyage.montantTotal }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center mt-5">
+    <a href="{{ path('app_reservationpackvoyage_index') }}" class="btn btn-secondary me-3">
+        ← Retour à la liste
+    </a>
+
+    <form method="post"
+          action="{{ path('app_reservationpackvoyage_delete', {'id_reservation': reservationpackvoyage.idReservation}) }}"
+          onsubmit="return confirm('Voulez-vous vraiment supprimer cette réservation ?');"
+          style="display: inline-block;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservationpackvoyage.idReservation) }}">
+        <button class="btn btn-danger btn-lg">
+            <i class="fas fa-trash me-2"></i> Supprimer la réservation
+        </button>
+    </form>
+    </div>
+
+
+{% endblock %}

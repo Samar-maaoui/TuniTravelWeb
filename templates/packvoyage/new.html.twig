@@ -1,0 +1,61 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Créer un Pack Voyage</h1>
+
+    {{ form_start(form) }}
+
+    <div class="mb-3">
+        {{ form_label(form.nomPack) }}
+        {{ form_widget(form.nomPack, {'attr': {'class': 'form-control' ~ (form_errors(form.nomPack) ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">{{ form_errors(form.nomPack) }}</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.vol) }}
+        {{ form_widget(form.vol, {'attr': {'class': 'form-select' ~ (form_errors(form.vol) ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">{{ form_errors(form.vol) }}</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.hotel) }}
+        {{ form_widget(form.hotel, {'attr': {'class': 'form-select' ~ (form_errors(form.hotel) ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">{{ form_errors(form.hotel) }}</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.excursion) }}
+        {{ form_widget(form.excursion, {'attr': {'class': 'form-select' ~ (form_errors(form.excursion) ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">{{ form_errors(form.excursion) }}</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.prixTotal) }}
+        {{ form_widget(form.prixTotal, {'attr': {'class': 'form-control' ~ (form_errors(form.prixTotal) ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">{{ form_errors(form.prixTotal) }}</div>
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.details) }}
+        {{ form_widget(form.details, {'attr': {'class': 'form-control' ~ (form_errors(form.details) ? ' is-invalid' : '')}}) }}
+        <div class="invalid-feedback">{{ form_errors(form.details) }}</div>
+    </div>
+<div class="mb-3">
+    {{ form_label(form.nombrePlacesRestants) }}
+    {{ form_widget(form.nombrePlacesRestants, {'attr': {'class': 'form-control' ~ (form_errors(form.nombrePlacesRestants) ? ' is-invalid' : '')}}) }}
+    <div class="invalid-feedback">{{ form_errors(form.nombrePlacesRestants) }}</div>
+</div>
+
+
+
+   
+
+    <button type="submit" class="btn btn-primary">Créer</button>
+     <a href="{{ path('app_packvoyage_index') }}" 
+   class="return-btn" 
+   style="font-size: 1.2rem; padding: 10px 20px; border-radius: 6px;">
+    <i class="fas fa-arrow-left me-2"></i> retour
+</a>
+
+    {{ form_end(form) }}
+{% endblock %}

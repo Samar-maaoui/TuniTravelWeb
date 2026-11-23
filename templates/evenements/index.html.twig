@@ -1,0 +1,416 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .event-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: white;
+            height: 100%;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .event-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .event-body {
+            padding: 15px;
+        }
+        
+        .event-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .event-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .event-type {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .event-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+        
+        .icon-link {
+            color: #6c757d;
+            font-size: 1rem;
+            margin: 0 5px;
+            transition: color 0.3s;
+        }
+        
+        .icon-link:hover {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .add-event-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,123,255,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .add-event-btn:hover {
+            transform: scale(1.1);
+            color: white;
+            background: #0069d9;
+        }
+        
+        .search-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .type-CONFÉRENCE { background-color: #e3f2fd; color: #1976d2; }
+        .type-SÉMINAIRE { background-color: #e8f5e9; color: #388e3c; }
+        .type-CONCERT { background-color: #f3e5f5; color: #8e24aa; }
+        .type-SPORT { background-color: #fff3e0; color: #e65100; }
+        
+        .event-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        /* 2 cards per row */
+        .event-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding: 0 10px;
+        }
+
+        @media (max-width: 768px) {
+            .event-col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Loading indicator */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            margin-top: 30px;
+        }
+        
+        .pagination ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .pagination li {
+            margin: 0 5px;
+        }
+        
+        .pagination a,
+        .pagination span {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s;
+        }
+        
+        .pagination a:hover {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+        
+        .pagination .active span {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+        
+        .pagination .disabled span {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+        
+        /* Make pagination responsive */
+        @media (max-width: 576px) {
+            .pagination li {
+                margin: 0 2px;
+            }
+            
+            .pagination a,
+            .pagination span {
+                padding: 6px 10px;
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <!-- Filter and Search Form -->
+        <div class="search-container mb-4">
+            <form method="get" action="{{ path('app_evenements_index') }}" class="form-inline">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" name="search" class="form-control" placeholder="Chercher..." value="{{ app.request.query.get('search') }}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="type" id="typeSelect" class="form-control">
+                            <option value="">Tous les types</option>
+                            <option value="CONFÉRENCE" {% if app.request.query.get('type') == 'CONFÉRENCE' %}selected{% endif %}>CONFÉRENCE</option>
+                            <option value="SÉMINAIRE" {% if app.request.query.get('type') == 'SÉMINAIRE' %}selected{% endif %}>SÉMINAIRE</option>
+                            <option value="CONCERT" {% if app.request.query.get('type') == 'CONCERT' %}selected{% endif %}>CONCERT</option>
+                            <option value="SPORT" {% if app.request.query.get('type') == 'SPORT' %}selected{% endif %}>SPORT</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select name="lieu" class="form-control">
+                            <option value="">Tous lieux</option>
+                            {% for lieuOption in lieux %}
+                                <option value="{{ lieuOption.lieu }}" {% if app.request.query.get('lieu') == lieuOption.lieu %}selected{% endif %}>
+                                    {{ lieuOption.lieu }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Filter</button>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+
+        <div id="eventsContainer">
+            <div class="row">
+                {% for evenement in pagerFanta %}
+                    <div class="event-col"  style="margin-bottom:20px; margin-top:20px; ">
+                        <div class="event-card">
+                            {% if evenement.image %}
+                                <img src="{{ asset('/images/' ~ evenement.image) }}" alt="{{ evenement.nom }}" class="event-image">
+                            {% else %}
+                                <div class="event-image bg-light d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-calendar-alt fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="event-body">
+                                <h5 class="event-title">{{ evenement.nom }}</h5>
+                                <div class="event-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}</span>
+                                    <span><i class="fas fa-calendar-alt"></i> {{ evenement.dateEvenement ? evenement.dateEvenement|date('d/m/Y H:i') : '' }}</span>
+                                </div>
+                                <div class="event-meta">
+                                    <span><i class="fas fa-users"></i> {{ evenement.capacite }} places</span>
+                                    <span class="event-type type-{{ evenement.type }}">{{ evenement.type }}</span>
+                                </div>
+                                <div class="event-description">
+                                    {{ evenement.description|length > 150 ? evenement.description|slice(0, 150) ~ '...' : evenement.description }}
+                                </div>
+                                <div class="event-actions">
+                                    <a href="{{ path('app_evenements_show', {'id': evenement.id}) }}" class="icon-link" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_evenements_edit', {'id': evenement.id}) }}" class="icon-link" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" action="{{ path('app_evenements_delete', {'id': evenement.id}) }}" onsubmit="return confirm('Are you sure?')" style="display: inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evenement.id) }}">
+                                        <button type="submit" class="icon-link" style="border: none; background: none; padding: 0;">
+                                            <i class="fas fa-trash text-danger"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    
+                    </div>
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-info">No events found</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination">
+            {{ pagerfanta(pagerFanta) }}
+        </div>
+    </div>
+
+    <a href="{{ path('app_evenements_new') }}" class="add-event-btn" title="Add New Event">
+        <i class="fas fa-plus fa-lg"></i>
+    </a>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const typeSelect = document.getElementById('typeSelect');
+            const eventsContainer = document.getElementById('eventsContainer');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            let searchTimeout;
+
+            // Function to filter events
+            function filterEvents() {
+                clearTimeout(searchTimeout);
+                loadingIndicator.style.display = 'block';
+                
+                searchTimeout = setTimeout(function() {
+                    const searchValue = searchInput.value.toLowerCase();
+                    const typeValue = typeSelect.value;
+                    const eventCards = document.querySelectorAll('.event-col');
+                    let hasVisibleEvents = false;
+
+                    eventCards.forEach(card => {
+                        const title = card.querySelector('.event-title').textContent.toLowerCase();
+                        const type = card.querySelector('.event-type').textContent;
+                        const matchesSearch = title.includes(searchValue);
+                        const matchesType = typeValue === '' || type === typeValue;
+                        
+                        if (matchesSearch && matchesType) {
+                            card.style.display = 'block';
+                            hasVisibleEvents = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Show "no results" message if needed
+                    const noResultsMessage = document.querySelector('.alert-info');
+                    if (!hasVisibleEvents) {
+                        if (!noResultsMessage) {
+                            const row = document.querySelector('.row');
+                            row.innerHTML = '<div class="col-12"><div class="alert alert-info">No events match your search criteria</div></div>';
+                        }
+                    } else if (noResultsMessage) {
+                        noResultsMessage.remove();
+                    }
+
+                    loadingIndicator.style.display = 'none';
+                }, 300); // 300ms delay after typing stops
+            }
+
+            // Event listeners for instant search
+            searchInput.addEventListener('input', filterEvents);
+            typeSelect.addEventListener('change', filterEvents);
+        });
+
+        const handlePaginationClick = (event) => {
+            const paginationLinks = document.querySelectorAll('.pagination a');
+            
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('href');
+                    
+                    // Show loading indicator
+                    document.getElementById('loadingIndicator').style.display = 'block';
+                    
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newContent = doc.getElementById('eventsContainer').innerHTML;
+                            const newPagination = doc.querySelector('.pagination').innerHTML;
+                            
+                            document.getElementById('eventsContainer').innerHTML = newContent;
+                            document.querySelector('.pagination').innerHTML = newPagination;
+                            
+                            // Reattach event listeners
+                            attachPaginationListeners();
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        })
+                        .finally(() => {
+                            document.getElementById('loadingIndicator').style.display = 'none';
+                        });
+                });
+            });
+        };
+        
+        // Function to attach pagination listeners
+        const attachPaginationListeners = () => {
+            if (document.querySelector('.pagination a')) {
+                handlePaginationClick();
+            }
+        };
+        
+        // Initial attachment
+        attachPaginationListeners();
+    </script>
+{% endblock %}

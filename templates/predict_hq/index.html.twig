@@ -1,0 +1,251 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block body %}
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Section Styles */
+        section {
+            padding: 40px 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid rgb(45, 16, 112);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* Search Form Styles */
+        .search-section {
+            background-color: #f1f5f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .search-form {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-form input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-form button {
+            padding: 12px 20px;
+            background-color: #0a2463; /* Dark blue */
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .search-form button:hover {
+            background-color: #ffd700; /* Gold */
+        }
+
+        /* Events Styles */
+        .events-container {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .event-card {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fff;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-card h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .event-card p {
+            margin: 8px 0;
+        }
+
+        .event-card strong {
+            color: #2c3e50;
+        }
+
+        .event-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 15px;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #e74c3c;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fdecea;
+            border-radius: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .search-form input[type="text"] {
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+
+            .search-form button {
+                border-radius: 4px;
+            }
+
+            .events-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <main class="container">
+        <div data-controller="predict-hq">
+            <form method="get" action="{{ path('app_predicthq') }}" class="search-form" style="margin-right:10px; margin-bottom:20px;">
+                <input type="text" name="place" placeholder="Entrez un lieu..." value="{{ place }}" required data-predict-hq-target="input" data-action="input->predict-hq#search">
+                <button type="submit">Rechercher</button>
+            </form>
+
+            <div data-predict-hq-target="results">
+                {% if events %}
+                    <h2 style="margin-left:10px; color:white;">Événements pour "{{ place }}"</h2>
+                    <div class="events-container">
+                        {% for event in events %}
+                            <div class="event-card">
+                                <h3>{{ event.title }}</h3>
+
+                                {% if event.description is defined %}
+                                    <p><strong>Description :</strong> {{ event.description }}</p>
+                                {% endif %}
+
+                                <p><strong>Catégorie :</strong> {{ event.category }}</p>
+                                <p><strong>Date de début :</strong> {{ event.start|date('d/m/Y H:i') }}</p>
+                                <p><strong>Date de fin :</strong> {{ event.end|date('d/m/Y H:i') }}</p>
+                                <p><strong>Pays :</strong> {{ event.country }}</p>
+
+                                {% if event.labels is defined and event.labels is not empty %}
+                                    <p><strong>Labels :</strong> {{ event.labels|join(', ') }}</p>
+                                {% endif %}
+
+                                {% if event.phq_attendance is defined %}
+                                    <p><strong>Nombre estimé de participants :</strong> {{ event.phq_attendance }}</p>
+                                {% endif %}
+
+                                {% if event.entities is defined %}
+                                    {% for entity in event.entities %}
+                                        {% if entity.type == 'venue' and entity.formatted_address is defined %}
+                                            <p><strong>Adresse :</strong> {{ entity.formatted_address }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                {% if event.entities is defined %}
+                                    {% for entity in event.entities %}
+                                        {% if entity.type == 'event' and entity.entity_id is defined %}
+                                            {% if entity.entity_id matches('/.*\\.(jpg|jpeg|png|gif)$/') %}
+                                                <img src="{{ entity.entity_id }}" alt="Image de l'événement" class="event-image">
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>Aucun événement trouvé pour "{{ place }}"</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if app.flashes('error') %}
+            <div class="error-message">
+                {% for message in app.flashes('error') %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </main>
+
+    <script>
+        // JavaScript for enhanced functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission enhancement
+            const searchForm = document.querySelector('.search-form');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    const input = this.querySelector('input[name="place"]');
+                    if (input.value.trim() === '') {
+                        e.preventDefault();
+                        input.focus();
+                        input.style.borderColor = '#e74c3c';
+                    }
+                });
+            }
+
+            // Add animation to event cards when they come into view
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.event-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'baseadmin.html.twig' %}
+
+
+{% block body %}
+    <h1>Packvoyage</h1>
+
+    <table class="table">
+        <tbody>
+         <tr>
+                <th>NomPack</th>
+                <td>{{ packvoyage.nomPack }}</td>
+            </tr>
+            <tr>
+                <th>Vol</th>
+                <td>{{ packvoyage.vol.numeroVol }} - {{ packvoyage.vol.compagnie }}</td>
+            </tr>
+            <tr>
+                <th>Hotel</th>
+                <td>{{ packvoyage.hotel.nom }}</td>
+            </tr>
+            <tr>
+                <th>Excursion</th>
+                <td>{{ packvoyage.excursion.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prix_total</th>
+                <td>{{ packvoyage.prixTotal }}</td>
+            </tr>
+            <tr>
+                <th>Details</th>
+                <td>{{ packvoyage.details }}</td>
+            </tr>
+            <tr>
+                <th>Nombre_places_restants</th>
+                <td>{{ packvoyage.nombrePlacesRestants }}</td>
+            </tr>
+            
+          <tr>
+    <th>Image</th>
+   <td>
+    {% if packvoyage.imageUrl starts with 'http' %}
+        <a href="{{ packvoyage.imageUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir</a>
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ packvoyage.imageUrl) }}" alt="Image" style="height: 60px; width: auto;">
+    {% endif %}
+</td>
+
+
+</tr>
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_packvoyage_index') }}">back to list</a>
+
+<a href="{{ path('app_packvoyage_edit', {'nomPack': packvoyage.nomPack|url_encode}) }}">
+
+    {{ include('packvoyage/_delete_form.html.twig') }}
+{% endblock %}

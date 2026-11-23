@@ -1,0 +1,96 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Feedback - ItinéRêves{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    .rating {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+        display: inline-flex;
+        justify-content: center;
+    }
+    .rating input {
+        display: none;
+    }
+    .rating label {
+        font-size: 2rem;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+    .rating input:checked ~ label,
+    .rating label:hover,
+    .rating label:hover ~ label {
+        color: #ffc107;
+    }
+     
+        /* Force rouge pour tous les messages d'erreur */
+        .error-message,
+        .invalid-feedback,
+        .form-control.is-invalid ~ .invalid-feedback,
+        .form-control.is-invalid ~ .error-message,
+        .form-error-message {
+            color: #dc3545 !important;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        /* Correction spécifique pour le template */
+        .bg-light .error-message,
+        .bg-light .invalid-feedback {
+            color: #dc3545 !important;
+        }
+ 
+</style>
+
+<section class="section text-center bg-light" style="padding: 60px 0;">
+    <div class="container" style="max-width: 700px;">
+        <h2 class="mb-4" style="font-family: 'Montserrat'; color: #4154f1;">Donnez votre avis</h2>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+        {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+        
+        <!-- Hidden note field -->
+        <div style="display: none;">
+            {{ form_widget(form.note) }}
+        </div>
+        
+        <!-- Rating stars -->
+        <div class="mb-4 text-center">
+            <label style="font-weight: bold; font-size: 1.1rem; display: block; margin-bottom: 15px;">Note :</label>
+            <div class="rating mb-4" style="font-size: 2rem; color: #ffc107; direction: rtl; unicode-bidi: bidi-override;">
+                {% for i in 5..1 %}
+                    <input type="radio" id="star{{ i }}" name="feedback[note]" value="{{ i }}" 
+                           {% if form.vars.data.note == i %}checked{% endif %}
+                           onclick="document.getElementById('{{ form.note.vars.id }}').value = {{ i }};">
+                    <label for="star{{ i }}" style="cursor: pointer;"><i class="fas fa-star"></i></label>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Comment field -->
+        <div class="mb-4">
+            {{ form_widget(form.commentaire, {'attr': {'class': 'form-control', 'rows': 4, 'placeholder': 'Partagez votre expérience...'}}) }}
+            {{ form_errors(form.commentaire) }}
+        </div>
+        
+        <!-- Submit button -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #4154f1, #2536b8); border: none; border-radius: 30px; padding: 10px 30px; color: white;">
+                Envoyer
+            </button>
+            <a href="{{ path('app_feedback_list') }}" class="btn btn-outline-secondary ms-2" style="border-radius: 30px; padding: 10px 30px;">
+                <i class="fas fa-list me-2"></i>Voir mes feedbacks
+            </a>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</section>
+{% endblock %}

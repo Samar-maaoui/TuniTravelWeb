@@ -1,0 +1,36 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+<div class="success-container">
+    <h1>🎉 Vérification réussie !</h1>
+    <p>Félicitations {{ utilisateur.nom }} ! Votre compte a été vérifié avec succès.</p>
+    <p>La page va se fermer automatiquement...</p>
+
+    <div class="success-animation">
+        <div class="checkmark">&#10004;</div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    text-align: center;
+    margin-top: 100px;
+}
+.success-animation .checkmark {
+    font-size: 80px;
+    color: #2ecc71;
+    animation: pop 0.5s ease forwards;
+}
+@keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<script>
+// 🔥 Fermer la page automatiquement après 5 secondes
+setTimeout(function() {
+    window.close();
+}, 5000);
+</script>
+{% endblock %}

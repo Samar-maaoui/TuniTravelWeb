@@ -1,0 +1,116 @@
+parameters:
+    images_directory: '%kernel.project_dir%/public/uploads/images'
+    photos_directory: '%kernel.project_dir%/public/uploads/photos'
+    images_events: '%kernel.project_dir%/public/images'
+    paymee.api_key: '%env(PAYMEE_API_KEY)%'
+    paymee.api_url: '%env(PAYMEE_API_URL)%'
+    paymee.sandbox: '%env(bool:PAYMEE_SANDBOX)%'
+    guides_directory: '%kernel.project_dir%/public/uploads/guides'
+    excursions_directory: '%kernel.project_dir%/public/uploads/excursions'
+    faceplusplus_api_key: 'kIDbapSqAipoS8_MXUu5jYQMyT9vJ1P0'
+    faceplusplus_api_secret: 'xkYAensxCiy_Afruodl4EftsMRzFx_nD'
+    locale: 'fr'  
+    predicthq.access_token: '%env(PREDICTHQ_ACCESS_TOKEN)%'
+
+
+    recaptcha_site_key: '6Ldo1iQrAAAAAEbxwrS4RJFQu8E-EOun3MBjrL0C'
+    recaptcha_secret_key: '6Ldo1iQrAAAAALZaliarYl29sBje474GcIifBSpP'
+    twilio.account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    twilio.auth_token: '%env(TWILIO_AUTH_TOKEN)%'
+    twilio.whatsapp_from: '%env(TWILIO_WHATSAPP_FROM)%'
+    unsplash.api_key: '%env(UNSPLASH_API_KEY)%'  
+    postmark_api_token: '%env(POSTMARK_API_TOKEN)%'
+    postmark_sender_email: '%env(POSTMARK_SENDER_EMAIL)%'
+   
+
+
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    monolog.logger.reservation:
+        class: Psr\Log\LoggerInterface
+        arguments: ['@monolog.logger']
+        tags:
+            - { name: 'monolog.logger', channel: 'reservation' }
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/Tests/'
+
+    App\Repository\ReservationExcursionRepository:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    App\Service\PaymeeService:
+        arguments:
+            $apiKey: '%env(PAYMEE_API_KEY)%'
+            $apiUrl: '%env(PAYMEE_API_URL)%'
+            $sandboxMode: '%env(bool:PAYMEE_SANDBOX_MODE)%'
+
+    App\Service\PayPalClient:
+        arguments:
+            $clientId: '%env(PAYPAL_CLIENT_ID)%'
+            $clientSecret: '%env(PAYPAL_CLIENT_SECRET)%'
+
+    App\Form\PostType:
+        arguments:
+            $repo: '@App\Repository\PackvoyageRepository'
+            
+
+    App\Service\RecaptchaService:
+        arguments:
+            $secretKey: '%recaptcha_secret_key%'
+
+    App\Service\MyStripeService:
+        arguments:
+            $stripeSecretKey: '%env(STRIPE_SECRET_KEY)%'
+    App\Service\QrCodeGenerator: ~
+
+    App\Service\TwilioService:
+        arguments:
+            $accountSid: '%twilio.account_sid%'
+            $authToken: '%twilio.auth_token%'
+            $fromNumber: '%twilio.whatsapp_from%'
+
+    App\Service\UnsplashService:
+        arguments:
+            $unsplashApiKey: '%unsplash.api_key%'  
+
+  
+    App\Service\InfobipService:
+        arguments:
+            $infobipApiKey: '%env(INFOBIP_API_KEY)%'
+    App\Service\PostmarkService:
+        arguments:
+            $postmarkToken: '%postmark_api_token%'
+            $senderEmail: '%postmark_sender_email%'
+    App\Service\BrevoEmailService: 
+          arguments:
+            $apiKey: '%env(BREVO_API_KEY)%'
+            $defaultFrom: '%env(BREVO_DEFAULT_FROM)%'
+            $logger: '@logger'
+
+  
+
+    
+    App\Service\IdentityVerificationService:
+        arguments:
+            $facePlusPlusApiKey: '%env(FACE_PLUS_PLUS_API_KEY)%'
+            $facePlusPlusApiSecret: '%env(FACE_PLUS_PLUS_API_SECRET)%'
+    App\Service\FaceVerificationService:
+        arguments:
+            $apiKey: '%faceplusplus_api_key%'
+            $apiSecret: '%faceplusplus_api_secret%'
+    App\Service\PredictHQService:
+        arguments:
+            $predictHQAccessToken: '%predicthq.access_token%'
+
+   
+    App\Service\PdfService: ~
+   

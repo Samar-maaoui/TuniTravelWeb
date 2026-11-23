@@ -1,0 +1,193 @@
+{% extends 'baseclient.html.twig' %}
+{% block header %}
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between ">
+        <a href="" class="logo d-flex align-items-center">
+            <img src="assets/img/logopng1.png" alt="">
+            <span class="d-none d-lg-block">ITINIREVES</span>
+        </a>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+          
+
+        
+                <li class="nav-item">
+                    <a href="{{ path('app_login') }}" class="nav-link auth-button">Sign In</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('app_register') }}" class="nav-link auth-button">Sign Up</a>
+                </li>
+           
+        </ul>
+    </nav><!-- End Icons Navigation -->
+</header>
+{% endblock %}
+{% block body %}
+<script>
+    (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="bTEJzmOI8BYzf4dWnvu-7";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
+    </script>
+  <br>
+ 
+
+  <section class="luxury-section">
+      <div class="container luxury-container">
+          <div class="text-center mb-5">
+              <h1 class="luxury-title">ItiniReves</h1>
+              <h3 class="luxury-subtitle">Votre itinéraire, nos rêves d'évasion.</h3>
+          </div>
+          
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="luxury-card">
+                      <h3 class="luxury-card-title">Notre Histoire</h3>
+                      <p>Fondée en 2025, ItiniReves est née de la passion pour les voyages d'exception. Notre équipe de spécialistes parcourt le monde pour vous dénicher les adresses les plus exclusives et créer des expériences uniques.</p>
+                      <p>Aujourd'hui, nous sommes reconnus comme l'une des agences les plus prestigieuses, avec des partenariats exclusifs avec les plus grands noms de l'hôtellerie de luxe.</p>
+                  </div>
+              </div>
+              
+              <div class="col-md-6">
+                  <div class="luxury-card">
+                      <h3 class="luxury-card-title">Notre Philosophie</h3>
+                      <p>Chez ItiniReves, nous croyons que chaque voyage doit être une œuvre d'art sur mesure. Notre approche combine expertise, attention aux détails et accès privilégié aux meilleures adresses du monde.</p>
+                      <p>Nous créons des itinéraires qui vont au-delà du voyage, transformant chaque déplacement en une collection de moments inoubliables.</p>
+                  </div>
+              </div>
+          </div>
+          
+          <div class="luxury-stats">
+              <div class="stat-item">
+                  <div class="stat-number" id="clients-count">0</div>
+                  <div class="stat-label">Clients Satisfaits</div>
+              </div>
+              <div class="stat-item">
+                  <div class="stat-number" id="destinations-count">0</div>
+                  <div class="stat-label">Destinations</div>
+              </div>
+           
+          </div>
+          
+          <div class="text-center">
+              <div class="chart-container">
+                  <canvas id="satisfactionChart"></canvas>
+              </div>
+              
+              {% if app.user %}
+          
+         
+        {% else %}
+        
+                <a href="{{ path('app_login') }}" class="luxury-btn" style=" border-radius: 25px;  border: 2px solid gold; color: var(--gold); text-decoration: none; background-color: rgba(0,0,0,0.3); transition: all 0.3s ease;">
+                    SIGN IN
+                </a>
+                <a href="{{ path('app_register') }}" class="luxury-btn" style="padding: 12px 30px; border-radius: 25px; ">
+                    SIGN UP
+                </a>
+       
+        {% endif %}
+          </div>
+      </div>
+  </section>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+      // Animated Counter
+      function animateValue(id, start, end, duration) {
+          const obj = document.getElementById(id);
+          let startTimestamp = null;
+          const step = (timestamp) => {
+              if (!startTimestamp) startTimestamp = timestamp;
+              const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+              obj.innerHTML = Math.floor(progress * (end - start) + start);
+              if (progress < 1) {
+                  window.requestAnimationFrame(step);
+              }
+          };
+          window.requestAnimationFrame(step);
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+          // Start counters
+          animateValue("clients-count", 0, 2500, 2000);
+          animateValue("destinations-count", 0, 120, 1500);
+          animateValue("years-count", 0, 14, 1000);
+
+          // Satisfaction Chart
+          const ctx = document.getElementById('satisfactionChart').getContext('2d');
+          const chart = new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                  labels: ['Service Client', 'Qualité des Hôtels', 'Transport', 'Expérience Globale'],
+                  datasets: [{
+                      data: [98, 96, 94, 97],
+                      backgroundColor: [
+                          'rgba(212, 175, 55, 0.8)',
+                          'rgba(10, 26, 47, 0.8)',
+                          'rgba(184, 134, 11, 0.8)',
+                          'rgba(30, 58, 138, 0.8)'
+                      ],
+                      borderColor: [
+                          'rgba(212, 175, 55, 1)',
+                          'rgba(10, 26, 47, 1)',
+                          'rgba(184, 134, 11, 1)',
+                          'rgba(30, 58, 138, 1)'
+                      ],
+                      borderWidth: 2
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                      legend: {
+                          position: 'right',
+                          labels: {
+                              color: '#F8F8F8',
+                              font: {
+                                  size: 14
+                              }
+                          }
+                      },
+                      title: {
+                          display: true,
+                          text: 'Taux de Satisfaction (%)',
+                          color: '#D4AF37',
+                          font: {
+                              size: 18,
+                              family: "'Playfair Display', serif"
+                          }
+                      }
+                  },
+                  cutout: '70%',
+                  animation: {
+                      animateScale: true,
+                      animateRotate: true
+                  }
+              }
+          });
+
+          // Luxury card hover effect enhancement
+          const cards = document.querySelectorAll('.luxury-card');
+          cards.forEach(card => {
+              card.addEventListener('mouseenter', function() {
+                  this.style.background = 'rgba(10, 26, 47, 0.95)';
+                  this.style.borderColor = 'var(--dark-gold)';
+              });
+              card.addEventListener('mouseleave', function() {
+                  this.style.background = 'rgba(10, 26, 47, 0.8)';
+                  this.style.borderColor = 'var(--gold)';
+              });
+          });
+      });
+  </script>
+
+      
+     
+    </div>
+
+{% endblock %}

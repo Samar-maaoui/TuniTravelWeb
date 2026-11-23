@@ -1,0 +1,15 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Créer un nouveau vol{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Créer un nouveau vol</h1>
+
+        <div class="card shadow p-4">
+            {{ include('vol/_form.html.twig', { 'button_label': 'Créer' }) }}
+        </div>
+
+        <a href="{{ path('app_vol_index') }}" class="btn btn-secondary mt-3">← Retour à la liste</a>
+    </div>
+{% endblock %}

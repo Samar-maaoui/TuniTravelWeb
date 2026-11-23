@@ -1,0 +1,79 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+<div class="verification-result-failed">
+    <h1 class="title-failed">❌ Vérification échouée</h1>
+
+    <div class="progress-circle-failed">
+        <span id="pourcentage" class="percentage-failed">0%</span>
+    </div>
+
+    <p class="message-failed">
+        Votre taux de similarité est de <strong>{{ pourcentage }}%</strong>.<br>
+        Ce n'est pas suffisant pour valider votre identité.
+    </p>
+
+    <div class="button-group mt-4">
+        <a href="{{ path('verify_identity', {'token': token}) }}" class="btn btn-primary me-2">
+            🔄 Refaire une tentative
+        </a>
+        <a href="{{ path('app_admin') }}" class="btn btn-danger">
+            Retour à l'accueil
+        </a>
+    </div>
+</div>
+
+<style>
+.verification-result-failed {
+    text-align: center;
+    margin-top: 80px;
+}
+.title-failed {
+    font-size: 32px;
+    color: #e74c3c;
+    margin-bottom: 30px;
+}
+.progress-circle-failed {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    background: conic-gradient(#e74c3c {{ pourcentage }}%, #ecf0f1 {{ pourcentage }}%);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.percentage-failed {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e74c3c;
+}
+.message-failed {
+    margin-top: 30px;
+    font-size: 18px;
+    color: #c0392b;
+}
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const pourcentage = parseFloat('{{ pourcentage }}');
+    let compteur = 0;
+    const elem = document.getElementById('pourcentage');
+
+    const interval = setInterval(() => {
+        compteur++;
+        elem.textContent = compteur + '%';
+        if (compteur >= pourcentage) {
+            clearInterval(interval);
+        }
+    }, 20);
+});
+</script>
+{% endblock %}

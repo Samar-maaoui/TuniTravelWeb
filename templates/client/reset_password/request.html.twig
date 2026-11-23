@@ -1,0 +1,138 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}ITINIREVES - Mot de passe oublié{% endblock %}
+{% block header %}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .auth-container {
+            margin-top: 80px;
+            margin-bottom: 40px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 10px;
+            padding-left: 45px;
+            font-size: 0.95rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4154f1;
+            box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4154f1;
+        }
+
+        .btn-primary {
+            height: 50px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #4154f1, #2536b8);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 84, 241, 0.4);
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="auth-container container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="auth-card p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary mb-2">Mot de passe oublié</h2>
+                    <p class="text-muted">Entrez votre adresse email pour recevoir un code de réinitialisation sur WhatsApp</p>
+                </div>
+
+                {% for flash_error in app.flashes('danger') %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ flash_error }}
+                    </div>
+                {% endfor %}
+
+                {% for flash_success in app.flashes('success') %}
+                    <div class="alert alert-success" role="alert">
+                        {{ flash_success }}
+                    </div>
+                {% endfor %}
+
+                {{ form_start(form) }}
+                    <div class="mb-4 position-relative">
+                        <i class="bi bi-envelope input-icon"></i>
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-4">
+                        ENVOYER LE CODE
+                    </button>
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            <a href="{{ path('app_login') }}" class="text-primary">Retour à la connexion</a>
+                        </p>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

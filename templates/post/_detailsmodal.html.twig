@@ -1,0 +1,144 @@
+<!-- Titre + bouton fermer -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="offre-titre mb-0">OFFRE EXCLUSIVE</h4>
+    <button type="button" class="btn-close" onclick="manualCloseModal()" aria-label="Close"></button>
+</div>
+
+<!-- Détails du pack -->
+<table class="table">
+    <tbody>
+        <tr><th>Titre</th><td>{{ post.titre }}</td></tr>
+        <tr><th>Description</th><td>{{ post.description }}</td></tr>
+        <tr><th>Date_publication</th><td>{{ post.datePublication ? post.datePublication|date('Y-m-d') : '' }}</td></tr>
+        <tr><th>Date_expiration</th><td>{{ post.dateExpiration ? post.dateExpiration|date('Y-m-d') : '' }}</td></tr>
+        <tr><th>Statut</th><td>{{ post.statut }}</td></tr>
+    </tbody>
+</table>
+
+<!-- Formulaire -->
+<form id="form-reservation-{{ post.idPost }}">
+    <div id="reservation-fields-{{ post.idPost }}" class="d-none">
+        <label for="places" style="color: black;">Nombre de places</label>
+<input
+    type="number"
+    name="places"
+    class="form-control mb-3"
+    min="1"
+    required
+    style="color: black !important; background-color: white !important; border: 1px solid #ccc;">
+
+
+        <div id="message-box-{{ post.idPost }}" class="alert d-none" role="alert"></div>
+
+        <button type="submit" class="btn btn-primary w-100">Confirmer la réservation</button>
+
+        <div id="paypal-button-{{ post.idPost }}" class="mt-3 d-none text-center">
+            <a href="#" class="btn btn-outline-success" id="payer-paypal-{{ post.idPost }}">
+                Payer avec PayPal
+            </a>
+        </div>
+
+        <div id="paypal-success-message-{{ post.idPost }}" class="alert alert-success d-none mt-3"></div>
+    </div>
+</form>
+
+<!-- Bouton principal "Réserver" -->
+<div class="text-center mt-4">
+    <button type="button" class="btn btn-primary btn-show-reservation" data-id="{{ post.idPost }}">
+        Réserver
+    </button>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.open-post-modal').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const postId = this.dataset.id;
+
+            fetch(`/post/details/${postId}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('modalContent').innerHTML = html;
+                    const modal = new bootstrap.Modal(document.getElementById('postModal'));
+                    modal.show();
+
+                    initReservationForm(postId); // activer le submit
+                    initReservationButton(postId); // activer bouton "Réserver"
+                })
+                .catch(error => {
+                    console.error('Erreur de chargement du modal :', error);
+                    document.getElementById('modalContent').innerHTML = "<p>Erreur de chargement.</p>";
+                });
+        });
+    });
+
+    // Active bouton "Réserver"
+    function initReservationButton(postId) {
+        const btn = document.querySelector('.btn-show-reservation[data-id="' + postId + '"]');
+        const fields = document.getElementById('reservation-fields-' + postId);
+        if (btn && fields) {
+            btn.addEventListener('click', function () {
+                fields.classList.remove('d-none');
+                btn.classList.add('d-none');
+            });
+        }
+    }
+
+    // Gère la soumission du formulaire
+    function initReservationForm(postId) {
+        const form = document.getElementById('form-reservation-' + postId);
+        const reservationFields = document.getElementById('reservation-fields-' + postId);
+        const messageBox = document.getElementById('message-box-' + postId);
+        const paypalSection = document.getElementById('paypal-button-' + postId);
+        const payerBtn = document.getElementById('payer-paypal-' + postId);
+
+        if (!form) return;
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch('/reservationpackvoyage/reserver/post/' + postId, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageBox.classList.remove('d-none');
+
+                if (data.success) {
+                    messageBox.className = 'alert alert-success mt-3';
+                    messageBox.textContent = data.success;
+
+                    form.querySelector('input[name="places"]').setAttribute('disabled', true);
+                    form.querySelector('button[type="submit"]').setAttribute('disabled', true);
+
+                    if (data.statutPaiement !== 'payée' && paypalSection && payerBtn) {
+                        paypalSection.classList.remove('d-none');
+                        payerBtn.onclick = function (e) {
+                            e.preventDefault();
+                            const url = '/reservationpackvoyage/payer/' + data.reservationId;
+                            const popup = window.open(url, 'paypal_popup', 'width=600,height=700');
+                            if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+                                alert("Veuillez autoriser les pop-ups pour ce site.");
+                            }
+                        };
+                    }
+                } else {
+                    messageBox.className = 'alert alert-danger mt-3';
+                    messageBox.textContent = data.error || 'Une erreur est survenue.';
+                }
+            })
+            .catch(error => {
+                messageBox.classList.remove('d-none');
+                messageBox.className = 'alert alert-danger mt-3';
+                messageBox.textContent = 'Erreur lors de la réservation.';
+                console.error(error);
+            });
+        });
+    }
+});
+</script>
+

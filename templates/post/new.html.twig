@@ -1,0 +1,15 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Création d'un Poste</h1>
+
+    {{ include('post/_form.html.twig') }}
+
+    <!-- Return button (icon) in top right corner -->
+ <a href="{{ path('admin_post_index') }}" 
+   class="return-btn" 
+   style="font-size: 1.2rem; padding: 10px 20px; border-radius: 6px;">
+    <i class="fas fa-arrow-left me-2"></i> retour
+</a>
+
+{% endblock %}

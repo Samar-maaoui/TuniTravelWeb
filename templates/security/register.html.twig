@@ -1,0 +1,224 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Inscription - ITINIREVES{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .form-error-message,
+        .invalid-feedback,
+        .form-error {
+            display: block;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            background-color: #fff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            border: 1px solid #dc3545;
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .form-control.is-invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+        
+        .recaptcha-error {
+            display: block;
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            background-color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            border: 1px solid #dc3545;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .g-recaptcha {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .g-recaptcha > div {
+            margin: 0 auto;
+        }
+        
+        /* Flash messages styling */
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-dark bg-opacity-50">
+    <div class="bg-white p-5 rounded-4 shadow-lg" style="width: 100%; max-width: 500px;">
+        <div class="text-center mb-4">
+            <img id="photoPreview" src="{{ asset('assets/img/default-avatar.png') }}" alt="Avatar"
+                 class="rounded-circle border border-primary" style="width: 100px; height: 100px; object-fit: cover;">
+            <div class="mt-3">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'id': 'registration-form'}}) }}
+                <div class="mb-3">
+                    {{ form_widget(form.photo, {'attr': {'onchange': 'previewImage(this)', 'class': 'form-control' ~ (form_errors(form.photo) ? ' is-invalid' : '')}}) }}
+                    {% if form_errors(form.photo) %}
+                        <div class="form-error-message">
+                            {{ form_errors(form.photo) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="form-group position-relative">
+                    {{ form_widget(form.nom, {
+                        'attr': {'class': 'form-control' ~ (form_errors(form.nom) ? ' is-invalid' : ''), 'placeholder': 'Nom'}
+                    }) }}
+                    {% if form_errors(form.nom) %}
+                        <div class="form-error-message">
+                            {{ form_errors(form.nom) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="form-group position-relative">
+                    {{ form_widget(form.prenom, {
+                        'attr': {'class': 'form-control' ~ (form_errors(form.prenom) ? ' is-invalid' : ''), 'placeholder': 'Prénom'}
+                    }) }}
+                    {% if form_errors(form.prenom) %}
+                        <div class="form-error-message">
+                            {{ form_errors(form.prenom) }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% set fields = {
+            'email': 'Email',
+            'cin': 'CIN',
+            'telephone': 'Téléphone',
+            'dateNaissance': 'Date de naissance',
+            'adresse': 'Adresse',
+            'mot_de_passe': 'Mot de passe'
+        } %}
+
+        {% for field, label in fields %}
+            <div class="mb-3">
+                {{ form_widget(attribute(form, field), {
+                    'attr': {
+                        'class': 'form-control' ~ (form_errors(attribute(form, field)) ? ' is-invalid' : ''),
+                        'placeholder': label
+                    }
+                }) }}
+                {% if form_errors(attribute(form, field)) %}
+                    <div class="form-error-message">
+                        {{ form_errors(attribute(form, field)) }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {# reCAPTCHA integration #}
+        <div class="mb-3">
+            <div id="recaptcha-container"></div>
+            {% if recaptcha_error is defined and recaptcha_error %}
+                <div class="recaptcha-error">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Veuillez confirmer que vous n'êtes pas un robot
+                </div>
+            {% endif %}
+            <input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 rounded-pill" id="submit-button">
+            <i class="bi bi-person-plus me-2"></i>S'inscrire
+        </button>
+
+        <div class="text-center mt-3">
+            <span class="text-muted">Déjà inscrit ? </span>
+            <a href="{{ path('app_login') }}" class="fw-bold text-primary">Se connecter</a>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('photoPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        let recaptchaWidget;
+        
+        function initRecaptcha() {
+            recaptchaWidget = grecaptcha.render('recaptcha-container', {
+                'sitekey': '{{ recaptcha_site_key }}',
+                'callback': function(response) {
+                    document.getElementById('recaptchaResponse').value = response;
+                    validateForm();
+                },
+                'expired-callback': function() {
+                    document.getElementById('recaptchaResponse').value = '';
+                    validateForm();
+                }
+            });
+        }
+
+        function validateForm() {
+            const recaptchaResponse = document.getElementById('recaptchaResponse').value;
+            const submitButton = document.getElementById('submit-button');
+            
+            if (!recaptchaResponse) {
+                submitButton.disabled = true;
+                return false;
+            }
+            
+            submitButton.disabled = false;
+            return true;
+        }
+
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+           
+        });
+    </script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=initRecaptcha&render=explicit" async defer></script>
+{% endblock %}

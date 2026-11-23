@@ -1,0 +1,54 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Liste des hôtels{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Liste des hôtels</h1>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{{ path('admin_hotel_add') }}" class="btn btn-primary">Ajouter un hôtel</a>
+        
+      <form method="get" action="{{ path('admin_hotel_list') }}" class="mb-4">
+        <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Rechercher un hôtel par nom" value="{{ search|default('') }}">
+        <button type="submit" class="btn btn-outline-primary">Rechercher</button>
+         </div>
+</form>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix par nuit</th>
+                <th>Disponible</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+           {% for hotel in hotels %}
+    <tr>
+        <td>{{ hotel.nom }}</td>
+        <td>{{ hotel.prixNuit }}</td>
+        <td>{{ hotel.estDisponible ? 'Oui' : 'Non' }}</td>
+        <td>
+            <a href="{{ path('admin_hotel_edit', {'id_hotel': hotel.idHotel}) }}" class="btn btn-warning">Modifier</a>
+            
+            <form action="{{ path('admin_hotel_delete', {'id_hotel': hotel.idHotel}) }}" method="post" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet hôtel ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ hotel.idHotel) }}">
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+
+            <a href="{{ path('hotel_reservations_pdf', {'id': hotel.idHotel}) }}" class="btn btn-outline-primary mt-2">Exporter les réservations PDF</a>
+        </td>
+    </tr>
+{% else %}
+    <tr>
+        <td colspan="4" class="text-center">Aucun hôtel trouvé.</td>
+    </tr>
+{% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

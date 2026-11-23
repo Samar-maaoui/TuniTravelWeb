@@ -1,0 +1,100 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Dashboard Statistiques{% endblock %}
+
+{% block body %}
+<style>
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        padding: 2rem;
+    }
+
+    .dashboard-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 0 15px rgba(0,0,0,0.08);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dashboard-title {
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    #chart_div, #chart_line, #chart_bar {
+        width: 100%;
+        height: 350px;
+    }
+
+    @media (max-width: 992px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="dashboard-grid">
+    <div class="dashboard-card">
+        <div class="dashboard-title">📊 Répartition des Réservations</div>
+        <div id="chart_div"></div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-title">📈 Évolution Mensuelle</div>
+        <div id="chart_line"></div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="dashboard-title">👥 Top 5 Utilisateurs</div>
+        <div id="chart_bar"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+        // PieChart
+        var data = google.visualization.arrayToDataTable({{ chartDataJson|raw }});
+        var pieOptions = {
+            pieHole: 0.4,
+            chartArea: { width: '90%', height: '80%' },
+            legend: { position: 'right', textStyle: { color: '#444', fontSize: 13 } },
+            titleTextStyle: { fontSize: 15, bold: true },
+            colors: ['#3366CC', '#DC3912', '#FF9900', '#109618', '#990099']
+        };
+        new google.visualization.PieChart(document.getElementById('chart_div')).draw(data, pieOptions);
+
+        // LineChart
+        var lineData = google.visualization.arrayToDataTable({{ lineChartDataJson|raw }});
+        var lineOptions = {
+            curveType: 'function',
+            legend: { position: 'bottom' },
+            colors: ['#007bff'],
+            chartArea: { width: '85%', height: '70%' }
+        };
+        new google.visualization.LineChart(document.getElementById('chart_line')).draw(lineData, lineOptions);
+
+        // BarChart (Top Utilisateurs)
+        var barData = google.visualization.arrayToDataTable({{ barChartDataJson|raw }});
+        var barOptions = {
+            chartArea: { width: '85%', height: barData.getNumberOfRows() * 60 + 'px' },
+            hAxis: { minValue: 0 },
+            legend: { position: 'none' },
+            bar: { groupWidth: '70%' },
+            colors: {{ barColors|raw }}
+        };
+        new google.visualization.BarChart(document.getElementById('chart_bar')).draw(barData, barOptions);
+    }
+</script>
+{% endblock %}

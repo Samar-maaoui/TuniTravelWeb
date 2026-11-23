@@ -1,0 +1,18 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+
+    {{ include('post/_form.html.twig', {'button_label': 'Update'}) }}
+
+   
+    <a href="{{ path('admin_post_index') }}" 
+   class="return-btn" 
+   style="font-size: 1.2rem; padding: 10px 20px; border-radius: 6px;">
+    <i class="fas fa-arrow-left me-2"></i> retour
+</a>
+
+    <!-- Floating Delete Button -->
+    <div class="floating-delete-btn">
+        {{ include('post/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'basereservation.html.twig' %}
+
+{% block body %}
+<style>
+    table td, table th {
+        padding: 1rem;
+    }
+    img.qr-code {
+        width: 200px;
+        height: 200px;
+    }
+</style>
+
+<div class="container d-flex justify-content-center mt-5">
+    <div class="card p-5 shadow-lg rounded-4" style="width: 100%; max-width: 1600px; background-color: #ffffff;">
+        <h2 class="text-center mb-4" style="font-weight: 600; color: #333;">Mes Réservations de Vol</h2>
+
+        {# 🔍 Barre de recherche et tri #}
+        <form method="get" class="row g-3 mb-4">
+            <div class="col-md-6">
+                <input type="text" name="search" class="form-control" placeholder="Rechercher un aéroport..." value="{{ app.request.get('search') }}">
+            </div>
+            <div class="col-md-3">
+                <select name="sort" class="form-select" onchange="this.form.submit()">
+                    <option value="">Trier par...</option>
+                    <option value="prix" {% if app.request.get('sort') == 'prix' %}selected{% endif %}>Prix</option>
+                    <option value="date" {% if app.request.get('sort') == 'date' %}selected{% endif %}>Date de départ</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Rechercher</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Numéro de Vol</th>
+                        <th>Compagnie</th>
+                        <th>Départ</th>
+                        <th>Arrivée</th>
+                        <th>Date Départ</th>
+                        <th>Date Arrivée</th>
+                        <th>Classe</th>
+                        <th>Prix</th>
+                        <th>QR Code</th>
+                        <th>Actions</th>
+                        <th>PDF</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservationvol in reservationvols %}
+                        <tr>
+                            <td>{{ reservationvol.vol.numeroVol }}</td>
+                            <td>{{ reservationvol.vol.compagnie }}</td>
+                            <td>{{ reservationvol.vol.aeroDepart }}</td>
+                            <td>{{ reservationvol.vol.aeroArrivee }}</td>
+                            <td>{{ reservationvol.vol.dateDepart|date('d/m/Y H:i') }}</td>
+                            <td>{{ reservationvol.vol.dateArrivee|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <span class="badge bg-primary text-uppercase">{{ reservationvol.classeService }}</span>
+                            </td>
+                            <td><strong>{{ reservationvol.vol.prix }} TND</strong></td>
+                            <td>
+                                <!-- Bouton pour ouvrir le QR Code -->
+                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#qrModal{{ reservationvol.idReservation }}">
+                                    Voir QR Code
+                                </button>
+
+                                <!-- Modal QR Code -->
+                                <div class="modal fade" id="qrModal{{ reservationvol.idReservation }}" tabindex="-1" aria-labelledby="qrModalLabel{{ reservationvol.idReservation }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5>QR Code </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                            </div>
+                                            <div class="modal-body d-flex justify-content-center">
+                                                <img src="{{ qrcodes[reservationvol.idReservation] }}" alt="QR Code" class="qr-code">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <form method="post" action="{{ path('app_reservation_vol_delete', {'id_reservation': reservationvol.idReservation}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservationvol.idReservation) }}">
+                                    <button class="btn btn-outline-danger btn-sm">Supprimer</button>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{{ path('app_reservation_vol_pdf', {'id_reservation': reservationvol.idReservation}) }}" class="btn btn-outline-primary btn-sm">
+                                    Exporter en PDF
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="11" class="text-muted">Aucune réservation trouvée.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Packvoyage</h1>
+
+    <!-- Barre de recherche -->
+    <form method="get" class="d-flex mb-3">
+        <input type="text" name="search" value="{{ search }}" class="form-control me-2" placeholder="Recherche...">
+        <button class="btn btn-outline-primary">Rechercher</button>
+    </form>
+
+    <!-- Bouton ajouter -->
+    <div class="mb-3 text-end">
+        <a href="{{ path('app_packvoyage_new') }}" class="btn-floating">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="{{ path('app_packvoyage_index', {
+                        search: search,
+                        sort: 'nomPack',
+                        direction: sort == 'nomPack' and direction == 'ASC' ? 'DESC' : 'ASC'
+                    }) }}">
+                        NomPack
+                        {% if sort == 'nomPack' %}
+                            {{ direction == 'ASC' ? '▲' : '▼' }}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>Vol</th>
+                <th>Hotel</th>
+                <th>Excursion</th>
+                <th>
+                    <a href="{{ path('app_packvoyage_index', {
+                        search: search,
+                        sort: 'prix_total',
+                        direction: sort == 'prix_total' and direction == 'ASC' ? 'DESC' : 'ASC'
+                    }) }}">
+                        Prix_total
+                        {% if sort == 'prix_total' %}
+                            {{ direction == 'ASC' ? '▲' : '▼' }}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>Details</th>
+                <th>
+                    <a href="{{ path('app_packvoyage_index', {
+                        search: search,
+                        sort: 'nombre_places_restants',
+                        direction: sort == 'nombre_places_restants' and direction == 'ASC' ? 'DESC' : 'ASC'
+                    }) }}">
+                        Places restantes
+                        {% if sort == 'nombre_places_restants' %}
+                            {{ direction == 'ASC' ? '▲' : '▼' }}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>Image_url</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for packvoyage in packvoyages %}
+            <tr>
+                <td>{{ packvoyage.nomPack }}</td>
+                <td>{{ packvoyage.vol.numeroVol }} - {{ packvoyage.vol.compagnie }}</td>
+                <td>{{ packvoyage.hotel.nom }}</td>
+                <td>{{ packvoyage.excursion.nom }}</td>
+                <td>{{ packvoyage.prixTotal }}</td>
+                <td>{{ packvoyage.details }}</td>
+                <td>{{ packvoyage.nombrePlacesRestants }}</td>
+<td>
+    {% if packvoyage.imageUrl starts with 'http' %}
+        <a href="{{ packvoyage.imageUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir</a>
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ packvoyage.imageUrl) }}" alt="Image" style="height: 60px; width: auto;">
+    {% endif %}
+</td>
+
+                <td>
+                    <a href="{{ path('app_packvoyage_show', {'nomPack': packvoyage.nomPack|url_encode}) }}" class="icon-link">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{{ path('app_packvoyage_edit', {'nomPack': packvoyage.nomPack|url_encode}) }}" class="icon-link">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">Aucun pack trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

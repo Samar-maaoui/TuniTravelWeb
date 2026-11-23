@@ -1,0 +1,182 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Mes Feedbacks - ItinéRêves{% endblock %}
+
+{% block body %}
+<style>
+    .feedback-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    
+    .feedback-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+        margin-bottom: 20px;
+        overflow: hidden;
+        background-color: white;
+    }
+    
+    .feedback-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .feedback-header {
+        background-color: #f8f9ff;
+        padding: 15px 20px;
+        border-bottom: 1px solid #edf0ff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .feedback-body {
+        padding: 20px;
+    }
+    
+    .feedback-date {
+        font-size: 0.85rem;
+        color: #666;
+    }
+    
+    .rating-display {
+        display: flex;
+        gap: 2px;
+    }
+    
+    .star {
+        font-size: 1.2rem;
+    }
+    
+    .star-filled {
+        color: #ffc107;
+    }
+    
+    .star-empty {
+        color: #ddd;
+    }
+    
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .btn {
+        border-radius: 25px;
+        padding: 8px 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #4154f1, #2536b8);
+        border: none;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(65, 84, 241, 0.3);
+    }
+    
+    .btn-edit {
+        background-color: #4154f1;
+        color: white;
+    }
+    
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .btn-new {
+        margin-bottom: 20px;
+    }
+    
+    .no-feedback {
+        padding: 40px 20px;
+        text-align: center;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .page-title {
+        font-family: 'Montserrat', sans-serif;
+        color: #4154f1;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+    }
+    
+    .alert {
+        border-radius: 10px;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        padding: 12px 20px;
+    }
+    
+    .alert-success {
+        background-color: #e0f9ea;
+        color: #0d6832;
+        border-left: 4px solid #0d6832;
+    }
+</style>
+
+<section class="section bg-light py-5">
+    <div class="container feedback-container">
+        <h2 class="page-title">Mes Feedbacks</h2>
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+
+        <div class="text-end mb-4">
+            <a href="{{ path('app_feedback') }}" class="btn btn-primary btn-new">
+                <i class="fas fa-plus me-2"></i>Nouveau Feedback
+            </a>
+        </div>
+
+        {% if feedbacks|length > 0 %}
+            {% for feedback in feedbacks %}
+                <div class="feedback-card">
+                    <div class="feedback-header">
+                        <div class="rating-display">
+                            {% for i in 1..5 %}
+                                {% if feedback.note is not null and i <= feedback.note %}
+                                    <span class="star star-filled">★</span>
+                                {% else %}
+                                    <span class="star star-empty">★</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <span class="feedback-date">{{ feedback.dateFeedback ? feedback.dateFeedback|date('d/m/Y H:i') : '' }}</span>
+                    </div>
+                    <div class="feedback-body">
+                        <p>{{ feedback.commentaire }}</p>
+                        <div class="action-buttons">
+                            <a href="{{ path('feedback_edit', {'id': feedback.id}) }}" class="btn btn-edit">
+                                <i class="fas fa-edit me-1"></i>Modifier
+                            </a>
+                            <form method="post" action="{{ path('feedback_delete', {'id': feedback.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce feedback?');" style="display: inline-block;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ feedback.id) }}">
+                                <button class="btn btn-delete"><i class="fas fa-trash me-1"></i>Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-feedback">
+                <p>Vous n'avez pas encore donné votre avis.</p>
+                <a href="{{ path('app_feedback') }}" class="btn btn-primary mt-3">Donnez votre avis</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

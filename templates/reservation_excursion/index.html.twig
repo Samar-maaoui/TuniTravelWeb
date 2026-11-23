@@ -1,0 +1,17 @@
+{% block body %}
+<div class="container">
+    <h1>Reservation for {{ excursion.nom }}</h1>
+
+    <p>{{ excursion.description }}</p>
+    <p><strong>Lieu:</strong> {{ excursion.lieu }}</p>
+    <p><strong>Prix:</strong> {{ excursion.prix }} TND</p>
+    <p><strong>Organisateur:</strong> {{ excursion.guide.nom }}</p>
+
+    <!-- Reservation Form (You can add a form here later) -->
+
+    <form action="{{ path('app_reservation_excursion', {'id': excursion.idExcursion}) }}" method="POST">
+        <!-- You can add form fields here for the reservation, e.g. number of people -->
+        <button type="submit" class="button">Reserve Now</button>
+    </form>
+</div>
+{% endblock %}

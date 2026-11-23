@@ -1,0 +1,6 @@
+parameters:
+  paymee.config:
+    api_key: '%env(PAYMEE_API_KEY)%'
+    merchant_id: '%env(PAYMEE_MERCHANT_ID)%'
+    base_url: '%env(PAYMEE_SANDBOX_URL)%'
+    env: '%env(PAYMEE_ENV)%'

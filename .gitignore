@@ -1,0 +1,53 @@
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/asset-mapper ###
+/assets/vendor/
+###< symfony/asset-mapper ###
+# Eviter les fichiers d'IDE
+/.idea/
+/.vscode/
+
+# Fichiers de logs Symfony
+/var/log/
+
+# Cache Twig (déjà couvert par /var/ mais plus précis)
+/var/
+/vendor/
+
+
+# Fichiers de build éventuels
+/public/build/
+/public/hot
+
+# .DS_Store (si MacOS)
+.DS_Store
+
+# Thumbs.db (si Windows)
+Thumbs.db
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+/.env.local

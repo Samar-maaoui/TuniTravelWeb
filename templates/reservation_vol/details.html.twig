@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+ {% block title %}Détails de la Réservation{% endblock %}
+
+ {% block body %}
+     <h1>Détails de la Réservation</h1>
+
+     <table class="table">
+         <tbody>
+             <tr>
+                 <th>Numéro de Vol</th>
+                 <td>{{ reservationvol.vol.numeroVol }}</td>
+             </tr>
+             <tr>
+                 <th>Compagnie</th>
+                 <td>{{ reservationvol.vol.compagnie }}</td>
+             </tr>
+             <tr>
+                 <th>Date de Départ</th>
+                 <td>{{ reservationvol.vol.dateDepart ? reservationvol.vol.dateDepart|date('d/m/Y H:i') : '' }}</td>
+             </tr>
+             <tr>
+                 <th>Date d'Arrivée</th>
+                 <td>{{ reservationvol.vol.dateArrivee ? reservationvol.vol.dateArrivee|date('d/m/Y H:i') : '' }}</td>
+             </tr>
+             <tr>
+                 <th>Aéroport de Départ</th>
+                 <td>{{ reservationvol.vol.aeroDepart }}</td>
+             </tr>
+             <tr>
+                 <th>Aéroport d'Arrivée</th>
+                 <td>{{ reservationvol.vol.aeroArrivee }}</td>
+             </tr>
+             <tr>
+                 <th>Prix</th>
+                 <td>{{ reservationvol.vol.prix }}</td>
+             </tr>
+             <tr>
+                 <th>Classe de Service</th>
+                 <td>{{ reservationvol.classeService }}</td>
+             </tr>
+         </tbody>
+     </table>
+ {% endblock %}

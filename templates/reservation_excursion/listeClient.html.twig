@@ -1,0 +1,85 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block body %}
+
+    {% if reservations is empty %}
+        <p class="no-reservation">Aucune réservation trouvée.</p>
+    {% else %}
+        <ul class="reservation-list">
+            {% for res in reservations %}
+                <li class="reservation-item">
+                    <div class="reservation-details">
+                        <h3>{{ res.excursion.nom }}</h3>
+                        <p><strong>Places réservées :</strong> {{ res.nbrPlaceReservee }}</p>
+                        <p><strong>Montant total :</strong> <span class="montant">{{ res.montantTotal }} DT</span></p>
+                        <p><strong>Statut :</strong> {{ res.statut }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <style>
+        .reservation-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 0;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+
+        .reservation-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .reservation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .reservation-details h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+
+        .reservation-details p {
+            font-size: 16px;
+            margin: 6px 0;
+            color: #444;
+        }
+
+        .reservation-details .montant {
+            color: #28a745; /* vert */
+            font-weight: bold;
+        }
+
+        p.no-reservation {
+            font-size: 18px;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+{% endblock %}

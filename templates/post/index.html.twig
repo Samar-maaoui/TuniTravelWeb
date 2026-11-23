@@ -1,0 +1,97 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Post</h1>
+
+    <!-- Barre de recherche -->
+    <form method="get" class="d-flex mb-3">
+        <input type="text" name="search" value="{{ search }}" class="form-control me-2" placeholder="Rechercher un post...">
+        <button class="btn btn-outline-primary">Rechercher</button>
+    </form>
+
+    <!-- Button to create new Post -->
+    <div class="mb-3 text-end">
+        <a href="{{ path('admin_post_new') }}" class="btn-floating">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="{{ path('admin_post_index', {
+                        search: search,
+                        sort: 'titre',
+                        direction: sort == 'titre' and direction == 'ASC' ? 'DESC' : 'ASC'
+                    }) }}">
+                        Titre
+                        {% if sort == 'titre' %}
+                            {{ direction == 'ASC' ? '▲' : '▼' }}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>Description</th>
+                <th>
+                    <a href="{{ path('admin_post_index', {
+                        search: search,
+                        sort: 'date_publication',
+                        direction: sort == 'date_publication' and direction == 'ASC' ? 'DESC' : 'ASC'
+                    }) }}">
+                        Date publication
+                        {% if sort == 'date_publication' %}
+                            {{ direction == 'ASC' ? '▲' : '▼' }}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>Date expiration</th>
+                <th>
+                    <a href="{{ path('admin_post_index', {
+                        search: search,
+                        sort: 'statut',
+                        direction: sort == 'statut' and direction == 'ASC' ? 'DESC' : 'ASC'
+                    }) }}">
+                        Statut
+                        {% if sort == 'statut' %}
+                            {{ direction == 'ASC' ? '▲' : '▼' }}
+                        {% endif %}
+                    </a>
+                </th>
+                <th>Image</th>
+                <th>Pack associé</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.titre }}</td>
+                <td>{{ post.description }}</td>
+                <td>{{ post.datePublication ? post.datePublication|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ post.dateExpiration ? post.dateExpiration|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ post.statut }}</td>
+<td>
+    {% if post.imageUrl starts with 'http' %}
+        <a href="{{ post.imageUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir</a>
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ post.imageUrl) }}" alt="Image" style="height: 60px; width: auto;">
+    {% endif %}
+</td>
+                <td>{{ post.packvoyage ? post.packvoyage.nomPack : 'Aucun pack' }}</td>
+                <td>
+                    <a href="{{ path('admin_post_show', {'titre': post.titre|url_encode}) }}">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{{ path('admin_post_edit', { 'titre': post.titre|url_encode }) }}">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">Aucun post trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+<h1>Liste des Réservations Vol</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Classe</th>
+            <th>Actions</th>
+            <th>code a barre</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservationvol in reservationvols %}
+            <tr>
+                <td>{{ reservationvol.utilisateur.prenom }} {{ reservationvol.utilisateur.nom }}</td>
+                <td>{{ reservationvol.classeService }}</td>
+                <td>
+                    <form method="post" action="{{ path('app_reservation_vol_delete', {'id_reservation': reservationvol.idReservation}) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reservationvol.idReservation) }}">
+                        <button class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ path('app_generate_barcode', {'id': reservationvol.idReservation}) }}">
+                        <img src="data:image/png;base64,{{ barcodes[reservationvol.idReservation] }}" alt="Code-barres" style="width:200px; height:auto; margin-bottom:5px;">
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune réservation trouvée</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-center my-4">
+    <nav aria-label="Pagination">
+        <ul class="pagination pagination-lg">
+            {% for page in reservationvols.paginationData.pagesInRange %}
+                <li class="page-item {% if page == reservationvols.paginationData.current %}active{% endif %}">
+                    <a class="page-link" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({'page': page})) }}">
+                        {{ page }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</div>
+
+
+
+<div style="height:400px;">
+    <canvas id="serviceClassChart"></canvas>
+</div>
+
+<script>
+    const stats = {{ stats|json_encode|raw }};
+    const ctx = document.getElementById('serviceClassChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(stats),
+            datasets: [{
+                label: 'Répartition par Classe',
+                data: Object.values(stats),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' },
+                title: { display: true, text: 'Répartition des Réservations par Classe de Service' }
+            }
+        }
+    });
+</script>
+{% endblock %} 

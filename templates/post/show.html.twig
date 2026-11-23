@@ -1,0 +1,62 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <h1>Poste</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Titre</th>
+                <td>{{ post.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ post.description }}</td>
+            </tr>
+            <tr>
+                <th>Date_publication</th>
+                <td>{{ post.datePublication ? post.datePublication|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Date_expiration</th>
+                <td>{{ post.dateExpiration ? post.dateExpiration|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ post.statut }}</td>
+            </tr>
+            <tr>
+                <th>Image_url</th>
+<td>
+    {% if post.imageUrl starts with 'http' %}
+        <a href="{{ post.imageUrl }}" target="_blank" class="btn btn-sm btn-outline-primary">Voir</a>
+    {% else %}
+        <img src="{{ asset('uploads/images/' ~ post.imageUrl) }}" alt="Image" style="height: 60px; width: auto;">
+    {% endif %}
+</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <!-- Edit button (Pencil Icon) -->
+        <a href="{{ path('admin_post_edit', { 'titre': post.titre|url_encode }) }}" class="action-btn">
+            <i class="fas fa-edit"></i> <!-- Icône pour Edit -->
+        </a>
+
+        <!-- Delete button (Trash Icon) -->
+        <form method="post" action="{{ path('admin_post_delete', {'id_post': post.IdPost}) }}" 
+              onsubmit="return confirm('Are you sure you want to delete this post?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ post.IdPost) }}">
+            <button type="submit" class="action-btn">
+                <i class="fas fa-trash"></i> <!-- Icône pour Delete -->
+            </button>
+        </form>
+    </div>
+
+  <a href="{{ path('admin_post_index') }}" class="btn btn-secondary btn-lg">
+    <i class="fas fa-arrow-left"></i> Retour à la liste
+</a>
+
+{% endblock %}

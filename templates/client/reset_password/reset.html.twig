@@ -1,0 +1,207 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}ITINIREVES - Réinitialisation du mot de passe{% endblock %}
+{% block header %}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .auth-container {
+            margin-top: 80px;
+            margin-bottom: 40px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 10px;
+            padding-left: 45px;
+            font-size: 0.95rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4154f1;
+            box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4154f1;
+        }
+
+        .btn-primary {
+            height: 50px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #4154f1, #2536b8);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 84, 241, 0.4);
+        }
+
+        .password-strength {
+            height: 5px;
+            margin-top: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+
+        .password-strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .strength-weak { width: 25%; background-color: #dc3545; }
+        .strength-medium { width: 50%; background-color: #ffc107; }
+        .strength-good { width: 75%; background-color: #6c757d; }
+        .strength-strong { width: 100%; background-color: #28a745; }
+
+        .alert {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="auth-container container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="auth-card p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary mb-2">Nouveau mot de passe</h2>
+                    <p class="text-muted">Choisissez un nouveau mot de passe pour votre compte</p>
+                </div>
+
+                {% for flash_error in app.flashes('danger') %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ flash_error }}
+                    </div>
+                {% endfor %}
+
+                {% for flash_success in app.flashes('success') %}
+                    <div class="alert alert-success" role="alert">
+                        {{ flash_success }}
+                    </div>
+                {% endfor %}
+
+                {{ form_start(form) }}
+                    <div class="mb-3 position-relative">
+                        <i class="bi bi-lock input-icon"></i>
+                        {{ form_label(form.password.first) }}
+                        {{ form_widget(form.password.first, {'id': 'password-field'}) }}
+                        {{ form_errors(form.password.first) }}
+                        <div class="password-strength">
+                            <div class="password-strength-meter" id="password-strength-meter"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 position-relative">
+                        <i class="bi bi-lock-fill input-icon"></i>
+                        {{ form_label(form.password.second) }}
+                        {{ form_widget(form.password.second) }}
+                        {{ form_errors(form.password.second) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-4">
+                        RÉINITIALISER LE MOT DE PASSE
+                    </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordField = document.getElementById('password-field');
+        const strengthMeter = document.getElementById('password-strength-meter');
+        
+        passwordField.addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            
+            // Update strength meter
+            strengthMeter.className = 'password-strength-meter';
+            
+            if (password.length === 0) {
+                strengthMeter.style.width = '0%';
+            } else if (strength < 30) {
+                strengthMeter.classList.add('strength-weak');
+            } else if (strength < 60) {
+                strengthMeter.classList.add('strength-medium');
+            } else if (strength < 80) {
+                strengthMeter.classList.add('strength-good');
+            } else {
+                strengthMeter.classList.add('strength-strong');
+            }
+        });
+        
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            
+            // Length contribution
+            if (password.length >= 8) strength += 25;
+            
+            // Character variety contribution
+            if (/[A-Z]/.test(password)) strength += 20; // Uppercase
+            if (/[a-z]/.test(password)) strength += 15; // Lowercase
+            if (/[0-9]/.test(password)) strength += 20; // Numbers
+            if (/[^A-Za-z0-9]/.test(password)) strength += 25; // Special chars
+            
+            // Penalty for repetitive characters
+            if (/(.)\\1{2,}/.test(password)) strength -= 10;
+            
+            return Math.min(100, Math.max(0, strength));
+        }
+    });
+</script>
+{% endblock %}

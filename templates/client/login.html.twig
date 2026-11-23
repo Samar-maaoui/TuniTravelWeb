@@ -1,0 +1,184 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}ITINIREVES - Connexion{% endblock %}
+{% block header %}{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .auth-container {
+            margin-top: 80px;
+            margin-bottom: 40px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            transition: transform 0.3s ease;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 10px;
+            padding-left: 45px;
+            font-size: 0.95rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #4154f1;
+            box-shadow: 0 0 0 0.2rem rgba(65, 84, 241, 0.25);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4154f1;
+        }
+
+        .btn-login {
+            height: 50px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #4154f1, #2536b8);
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(65, 84, 241, 0.4);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+   .text-danger {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+        }
+    .is-invalid {
+        border-color: #dc3545 !important;
+    }
+    
+    .invalid-feedback {
+        display: block;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+    
+    .needs-validation .form-control:invalid {
+        border-color: #dc3545;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="auth-container container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="auth-card p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary mb-2">Connexion</h2>
+                    <p class="text-muted">Connectez-vous à votre compte ITINIREVES</p>
+                </div>
+
+                {% if error %}
+                    <div class="alert alert-danger mb-4">
+                        Email ou mot de passe incorrect
+                    </div>
+                {% endif %}
+
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="mb-4 position-relative">
+                        <i class="bi bi-envelope input-icon"></i>
+                        {{ form_widget(form._username, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Email'
+                            }
+                        }) }}
+                        {% if form._username.vars.errors|length > 0 %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form._username.vars.errors %}
+                                    <div>{{ error.message }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4 position-relative">
+                        <i class="bi bi-lock input-icon"></i>
+                        {{ form_widget(form._password, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Mot de passe'
+                            }
+                        }) }}
+                        {% if form._password.vars.errors|length > 0 %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form._password.vars.errors %}
+                                    <div>{{ error.message }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn btn-primary btn-login w-100 mb-4">
+                        SE CONNECTER
+                    </button>
+
+                    <div class="text-center">
+                        <p class="mb-0">
+                            Pas encore de compte? 
+                            <a href="{{ path('app_register') }}" class="text-primary fw-bold">S'inscrire</a>
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <p class="mb-0">
+                            mot de passe oubliee ? 
+                            <a href="{{ path('app_forgot_password') }}" class="text-primary fw-bold"> renitialiser mot de passe</a>
+                        </p>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

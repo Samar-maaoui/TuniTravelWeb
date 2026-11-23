@@ -1,0 +1,15 @@
+
+{% block body %}
+<div class="container mt-5">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading">{{ message }}</h4>
+        <p>Transaction ID: <strong>244557</strong></p>
+        <p>Amount: <strong>220.25 TND</strong></p>
+        <hr>
+        <p class="mb-0">This was a static test payment simulation.</p>
+    </div>
+    <a href="{{ path('homepage') }}" class="btn btn-primary">
+        Return Home
+    </a>
+</div>
+{% endblock %}

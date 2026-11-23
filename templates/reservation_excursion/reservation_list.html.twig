@@ -1,0 +1,63 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4 text-center" style="color: #e67e22;">Toutes les Réservations d'Excursions</h1>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle text-center shadow-sm" style="background-color: #ecf0f1;">
+                <thead style="background-color:rgb(7, 81, 156); color: white;">
+                    <tr>
+                        <th>Excursion</th>
+                        <th>Utilisateur</th>
+                        <th>Places Réservées</th>
+                        <th>Montant Total</th>
+                        <th>Statut</th>
+                        <th>Date de Réservation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td>{{ reservation.excursion.nom }}</td>
+                            <td>{{ reservation.utilisateur.nom }}</td>
+                            <td>{{ reservation.nbrPlaceReservee }}</td>
+                            <td>{{ reservation.montantTotal }} TND</td>
+
+                            <td>
+                                {% if reservation.statut == 'CONFIRMEE' %}
+                                    <span class="badge" style="background-color: #e67e22;">Confirmée</span>
+                                {% elseif reservation.statut == 'ANNULEE' %}
+                                    <span class="badge bg-danger">Annulée</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">En attente</span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ reservation.dateReservation|date('d/m/Y H:i') }}</td>
+
+                            <td>
+                                <form method="post" action="{{ path('app_reservation_annuler', {'id': reservation.idReservation}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?');">
+                                    <button type="submit" class="btn btn-sm" style="background-color: #c0392b; color: white;">Annuler</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-4">
+                                Aucune réservation trouvée.
+                                <br>
+                                <a href="{{ path('app_reservation_nouvelle') }}" class="btn mt-3" style="background-color: #e67e22; color: white;">Faire une nouvelle réservation</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_excursion_index') }}" class="btn" style="background-color:rgb(7, 81, 156); color: white;">Retour à la liste des excursions</a>
+        </div>
+    </div>
+{% endblock %}

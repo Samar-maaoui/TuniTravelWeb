@@ -1,0 +1,38 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th> </th>
+                <th>Evenement</th>
+                <th>Nombre places</th>
+                <th>Date reservation</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservation_evenement in reservation_evenements %}
+            <tr>
+                <td>{{ reservation_evenement.utilisateur.nom }}</td>
+                <td>{{ reservation_evenement.utilisateur.prenom }}</td>
+                <td>{{ reservation_evenement.utilisateur.email }}</td>
+                <td>{{ reservation_evenement.utilisateur.Telephone}}</td>
+                <td> </td>
+                <td>{{ reservation_evenement.evenement.nom }}</td>
+                <td>{{ reservation_evenement.nombrePlaces }}</td>
+                <td>{{ reservation_evenement.dateReservation ? reservation_evenement.dateReservation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Aucun enregistrement trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'baseclient.html.twig' %}
+
+{% block title %}Tous les Packs - Vue client{% endblock %}
+
+{% block body %}
+<section class="section section-lg bg-default" id="packs">
+    <div class="container-wide">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 text-center">
+                <h3>Tous nos Packs</h3>
+                <div class="divider divider-decorate mx-auto"></div>
+
+                <div class="row row-30 justify-content-center">
+                    {% for post in posts %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <article class="post-boxed h-100">
+                               <figure class="post-boxed-image">
+    {% if post.getImageUrl starts with 'http' %}
+        {# Si l'image est une URL complète Unsplash #}
+        <img src="{{ post.getImageUrl }}" alt="{{ post.titre }}" class="img-fluid w-100" style="height: 240px; object-fit: cover;">
+    {% else %}
+        {# Sinon on suppose que c'est un fichier uploadé localement #}
+        <img src="{{ asset('uploads/images/' ~ post.getImageUrl) }}" alt="{{ post.titre }}" class="img-fluid w-100" style="height: 240px; object-fit: cover;">
+    {% endif %}
+</figure>
+
+                                <div class="post-boxed-body">
+                                    <div class="post-boxed-title">
+                                        <h5 class="text-center">{{ post.titre }}</h5>
+                                    </div>
+                               
+                                    <div class="post-boxed-footer text-center">
+                                        <a class="button button-xs button-primary button-nina open-post-modal" data-id="{{ post.getIdPost }}" href="#">Voir plus</a>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    {% else %}
+                        <div class="col-12 text-center">
+                            <p>Aucun pack disponible pour le moment</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Modal dynamique #}
+<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="modalContent">
+                <p>Chargement...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.open-post-modal').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            const postId = this.dataset.id;
+
+            fetch(`/post/details/${postId}`)
+                .then(res => res.text())
+                .then(html => {
+                    document.getElementById('modalContent').innerHTML = html;
+
+                    // Créer et afficher le modal
+                    const modal = new bootstrap.Modal(document.getElementById('postModal'));
+                    modal.show();
+
+                    // 👉 Attacher le listener ici APRÈS que le HTML a été injecté
+                    const btnReserve = document.querySelector('.btn-show-reservation');
+                    if (btnReserve) {
+                        btnReserve.addEventListener('click', function () {
+                            const id = this.dataset.id;
+                            const fields = document.getElementById('reservation-fields-' + id);
+                            if (fields) fields.classList.remove('d-none');
+                            this.classList.add('d-none');
+                        });
+                    }
+
+                    // Initialise aussi le formulaire
+                    initReservationForm(postId);
+                })
+                .catch(error => {
+                    console.error('Erreur de chargement du modal :', error);
+                    document.getElementById('modalContent').innerHTML = "<p>Erreur de chargement.</p>";
+                });
+        });
+    });
+
+    function initReservationForm(postId) {
+        const form = document.getElementById('form-reservation-' + postId);
+        const reservationFields = document.getElementById('reservation-fields-' + postId);
+        const messageBox = document.getElementById('message-box-' + postId);
+        const paypalSection = document.getElementById('paypal-button-' + postId);
+        const payerBtn = document.getElementById('payer-paypal-' + postId);
+
+        if (!form) return;
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch(`/reservationpackvoyage/reserver/post/${postId}`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageBox.classList.remove('d-none');
+                messageBox.classList.add('mt-3');
+
+                if (data.success) {
+                    messageBox.className = 'alert alert-success mt-3';
+                    messageBox.textContent = data.success;
+
+                    form.querySelector('input[name="places"]').setAttribute('disabled', true);
+                    form.querySelector('button[type="submit"]').setAttribute('disabled', true);
+
+                    if (data.statutPaiement !== 'payée' && paypalSection && payerBtn) {
+                        paypalSection.classList.remove('d-none');
+                        payerBtn.removeAttribute('href');
+
+                        payerBtn.onclick = function (e) {
+                            e.preventDefault();
+                            const url = `/reservationpackvoyage/payer/${data.reservationId}`;
+                            const popup = window.open(url, 'paypal_popup', 'width=600,height=700');
+
+                            if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+                                alert("Veuillez autoriser les pop-ups pour ce site.");
+                            }
+                        };
+                    }
+                } else {
+                    messageBox.className = 'alert alert-danger mt-3';
+                    messageBox.textContent = data.error || 'Une erreur est survenue.';
+                }
+            })
+            .catch(error => {
+                messageBox.classList.remove('d-none');
+                messageBox.className = 'alert alert-danger mt-3';
+                messageBox.textContent = 'Erreur lors de la réservation.';
+                console.error(error);
+            });
+        });
+
+        if (reservationFields) {
+            reservationFields.style.display = 'block';
+        }
+    }
+});
+</script>
+{% endblock %}
+

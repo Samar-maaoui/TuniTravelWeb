@@ -1,0 +1,38 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="mb-4 text-danger">⚠️ Supprimer l'utilisateur</h3>
+        <p>Êtes-vous sûr de vouloir <strong>supprimer</strong> cet utilisateur ? Cette action est irréversible.</p>
+
+        <div class="row mt-4">
+            <div class="col-md-3 text-center">
+                {% if utilisateur.photo %}
+                    <img src="{{ asset('uploads/photos/' ~ utilisateur.photo) }}" alt="Photo de profil" class="rounded-circle" width="100" height="100">
+                {% else %}
+                    <img src="{{ asset('assets/img/profile-img.jpg') }}" alt="Default" class="rounded-circle" width="100" height="100">
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Nom:</strong> {{ utilisateur.nom }}</li>
+                    <li class="list-group-item"><strong>Prénom:</strong> {{ utilisateur.prenom }}</li>
+                    <li class="list-group-item"><strong>Email:</strong> {{ utilisateur.email }}</li>
+                    <li class="list-group-item"><strong>Type:</strong> {{ utilisateur.typeUtilisateur }}</li>
+                 
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <form method="post" action="{{ path('admin_user_delete', {'id': utilisateur.id}) }}" onsubmit="return confirm('Confirmer la suppression ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ utilisateur.id) }}">
+                <button type="submit" class="btn btn-danger">🗑 Supprimer</button>
+            </form>
+
+            <a href="{{ path('admin_users_list') }}" class="btn btn-secondary">↩️ Annuler</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

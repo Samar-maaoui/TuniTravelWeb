@@ -1,0 +1,15 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    {{ include('evenements/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <!-- Return button in the top right -->
+    <a href="{{ path('app_evenements_index') }}" class="return-btn">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+
+    <!-- Floating Delete Button -->
+    <div class="floating-delete-btn">
+        {{ include('evenements/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

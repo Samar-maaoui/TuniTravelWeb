@@ -1,0 +1,144 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}
+<style>
+    .button { background-color:rgb(1, 42, 163); } /* Blue */
+    .btn2 { 
+        background-color: #f44336;
+        color: white;
+    } /* Red */
+        .button3 { background-color:orange; } /* Blue */
+
+    /* Conteneur de la carte avec flexbox pour aligner le contenu */
+    .card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /* Pour que la carte occupe tout l'espace restant, et les boutons en bas */
+    .card-body {
+        flex-grow: 1;
+    }
+
+    /* Style pour les boutons groupés */
+    .btn-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    /* Les boutons occupent 48% de la largeur pour être côte à côte */
+    .btn-group a {
+        width: 100%; 
+    }
+
+    /* Enlève les marges et le fond du footer pour garder tout propre */
+    .card-footer {
+        background: none;
+        padding: 0;
+    }
+
+    /* Ajouter des espacements uniformes et arrondir les coins des boutons */
+    .btn-group a {
+        border-radius: 5px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Ajout d'une petite marge entre les éléments de la grille */
+    .row-cols-md-3 {
+        margin-bottom: 20px;
+    }
+</style> 
+
+<br><br>
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for guide in guides %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="row g-0">
+                    <div class="col-md-4 d-flex justify-content-center align-items-center">
+                        {% if (guide.image)!=null %}
+                            <img src="{{ asset('uploads/guides/' ~ guide.image) }}" 
+                                 alt="Photo du guide" 
+                                 class="img-fluid rounded-circle" 
+                                 style="object-fit: cover; width: 120px; height: 120px;">
+                        {% else %}
+                            <div class="bg-secondary text-center rounded-circle" 
+                                 style="width: 120px; height: 120px; line-height: 120px; color: white;">
+                                Aucune image
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="flex-container">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ guide.nom }} {{ guide.prenom }}</h5>
+                            <p class="card-text">
+                                <strong>Langues :</strong> {{ guide.langues|join(', ') }}<br>
+                                <strong>Téléphone :</strong> {{ guide.numeroTel }}<br>
+                                <strong>Email :</strong> {{ guide.email }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="btn-group">
+                        <a href="{{ path('app_guide_edit', {'id_guide': guide.getIdGuide}) }}" class="btn button">
+                            <i class="fa-solid fa-pen"></i> Modifier
+                        </a>
+                        <button class="btn2" onclick="deleteGuide({{ guide.getIdGuide }}, '{{ csrf_token('delete' ~ guide.getIdGuide) }}', this)">
+    <i class="fa-solid fa-trash"></i> Supprimer
+</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>Aucun guide trouvé.</p>
+    {% endfor %}
+</div>
+
+<div class="mt-4">
+    <a href="{{ path('app_guide_new') }}" class="btn button3">
+        <i class="fa-solid fa-plus"></i> Ajouter un guide
+    </a>
+</div>
+<script>
+      function deleteGuide(id, token, button) {
+        if (confirm("Voulez-vous vraiment supprimer ce guide ?")) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/guide/' + id, true);  // Assurez-vous que l'URL correspond à votre route Symfony
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            // Définir ce qui se passe quand la requête est terminée
+            xhr.onload = function () {
+                if (xhr.status === 200 || xhr.status === 303) {
+                    alert('Guide supprimé avec succès');
+                    location.reload();
+                } else {
+                    alert('Une erreur est survenue. Le guide n\'a pas pu être supprimé.');
+                    button.style.backgroundColor = '';
+                    button.disabled = false;
+                }
+            };
+
+            // Envoyer la requête avec le token CSRF
+            xhr.send('_token=' + encodeURIComponent(token));
+        } else {
+            button.style.backgroundColor = '';
+            button.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

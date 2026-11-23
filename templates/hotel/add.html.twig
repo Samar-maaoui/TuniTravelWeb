@@ -1,0 +1,289 @@
+{%extends 'baseadmin.html.twig'%}
+
+
+{% block body %}
+<style>
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px auto;
+        }
+
+        .header {
+            background: linear-gradient(to right, #4A90E2, #0056b3);
+            padding: 20px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            color: white;
+        }
+
+        .header p {
+            color: #e1f3f8;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-control {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4A90E2;
+            outline: none;
+            box-shadow: 0 0 5px rgba(74, 144, 224, 0.5);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .toggle-container label {
+            font-weight: bold;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 14px;  /* Taille de police réduite */
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .cancel-button {
+            background-color: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #007bff;
+            padding: 8px 12px;  /* Matches size with save button */
+        }
+
+        .cancel-button:hover {
+            background-color: #e2e6ea;
+        }
+
+        .file-upload {
+            display: inline-block;
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s;
+            font-size: 14px; /* Taille de police réduite */
+        }
+
+        .file-upload:hover {
+            background-color: #0056b3;
+        }
+
+        .file-input {
+            display: none; /* Masquer l'input de fichier */
+        }
+        </style>
+<div class="form-container max-w-5xl mx-auto">
+    <div class="header">
+        <h2>Ajouter un Hôtel</h2>
+        <p>Remplissez le formulaire ci-dessous pour ajouter un nouvel hôtel à votre catalogue.</p>
+    </div>
+
+    <div class="p-8">
+        {{ form_start(form, {'attr': {'class': 'space-y-8'}}) }}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {# Nom de l'hôtel #}
+           <div class="form-group">
+                <label for="hotel_nom" class="block text-sm font-medium text-gray-800 mb-2">
+                    <i class="bi bi-building mr-2 text-blue-600"></i>
+                    Nom de l'hôtel
+                </label>
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'id': 'hotel_nom'}}) }}
+                {{ form_errors(form.nom, {'attr': {'class': 'error-message'}}) }}
+            </div>
+
+
+            {# Prix par nuit #}
+            <div class="form-group">
+                <label for="hotel_prix_nuit">
+                    <i class="bi bi-currency-dollar mr-2 text-blue-600"></i>
+                    Prix par nuit
+                </label>
+                <div class="relative">
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"></span>
+                        {{ form_widget(form.prix_nuit, {'attr': {'class': 'form-control rounded-r-lg', 'id': 'hotel_prix_nuit', 'min': '0', 'step': '0.01', 'placeholder': '0.00'}}) }}
+                    </div>
+                    {{ form_errors(form.prix_nuit, {'attr': {'class': 'error-message'}}) }}
+                </div>
+            </div>
+
+            {# Adresse #}
+            <div class="form-group">
+                <label for="hotel_adresse">
+                    <i class="bi bi-geo-alt mr-2 text-blue-600"></i>
+                    Adresse
+                </label>
+                {{ form_widget(form.adresse, {'attr': {'class': 'form-control', 'id': 'hotel_adresse'}}) }}
+                {{ form_errors(form.adresse, {'attr': {'class': 'error-message'}}) }}
+            </div>
+
+            {# Téléphone #}
+            <div class="form-group">
+                <label for="hotel_tel">
+                    <i class="bi bi-telephone mr-2 text-blue-600"></i>
+                    Téléphone
+                </label>
+                {{ form_widget(form.tel, {'attr': {'class': 'form-control', 'id': 'hotel_tel', 'pattern': '[0-9]{8}', 'placeholder': '12345678'}}) }}
+                {{ form_errors(form.tel, {'attr': {'class': 'error-message'}}) }}
+            </div>
+
+            {# Email #}
+            <div class="form-group">
+                <label for="hotel_email_contact">
+                    <i class="bi bi-envelope mr-2 text-blue-600"></i>
+                    Email de contact
+                </label>
+                {{ form_widget(form.email_contact, {'attr': {'class': 'form-control', 'id': 'hotel_email_contact'}}) }}
+                {{ form_errors(form.email_contact, {'attr': {'class': 'error-message'}}) }}
+            </div>
+
+            {# Disponibilité - Transformé en toggle switch #}
+            <div class="col-span-2 form-group toggle-container">
+                <label for="hotel_est_disponible" class="font-medium text-gray-800">Disponibilité</label>
+                <div class="relative inline-block w-14 align-middle select-none transition duration-200 ease-in">
+                    <label for="hotel_est_disponible" class="block overflow-hidden h-7 rounded-full bg-gray-300 cursor-pointer">
+                        {{ form_widget(form.est_disponible, {'attr': {'id': 'hotel_est_disponible', 'class': 'absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer focus:outline-none focus:ring-0 focus:border-blue-500 transition-transform duration-200 ease-linear checked:bg-blue-600 checked:border-blue-500 checked:right-0'}}) }}
+                        <span class="block w-full h-full overflow-hidden"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        {# Description #}
+        <div class="form-group">
+            <label for="hotel_description">
+                <i class="bi bi-text-paragraph mr-2 text-blue-600"></i>
+                Description
+            </label>
+            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'id': 'hotel_description', 'rows': '5'}}) }}
+            {{ form_errors(form.description, {'attr': {'class': 'error-message'}}) }}
+        </div>
+
+        {# Image Upload - Redesigned with preview #}
+<div class="form-group">
+    <label class="block text-sm font-medium text-gray-800 mb-2">
+        <div class="flex items-center">
+            <i class="bi bi-image mr-2 text-blue-600"></i>
+            Image de l'hôtel
+        </div>
+    </label>
+    <div class="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:bg-gray-50 transition-all duration-200">
+        <div class="space-y-2 text-center">
+            <div id="image-preview" class="w-full flex justify-center mb-3">
+                {% if hotel.imageHotel %}
+                    <div class="relative group">
+                        <img src="{{ asset('/images' ~ hotel.imageHotel) }}" alt="Aperçu" class="h-44 w-auto rounded-md object-cover transition-all duration-300"/>
+                        <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-md">
+                            <button type="button" onclick="removeImage()" class="text-white bg-red-500 hover:bg-red-600 rounded-full p-2 transform transition-transform duration-300 hover:scale-110">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="border-4 border-dashed border-gray-200 rounded-lg p-6 flex items-center justify-center">
+                        <i class="bi bi-image text-6xl text-gray-300"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <label class="file-upload">
+                <span class="bg-blue-600 text-white rounded-lg p-2 cursor-pointer text-center">
+                    Choisir un fichier
+                </span>
+                <input type="file" class="file-input" accept="image/*" onchange="updateFileName(this)">
+            </label>
+            <p id="file-name" class="mt-2 text-gray-600">Aucun fichier choisi</p>
+        </div>
+    </div>
+</div>
+<div class="pt-5 border-t border-gray-200 mt-8">
+    <div class="flex justify-end gap-2">
+        <a href="{{ path('admin_hotel_list') }}" class="button cancel-button py-2 px-4 rounded-lg shadow-sm text-sm font-medium">
+            <i class="bi bi-x-circle mr-2"></i>Annuler
+        </a>
+        {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+        <button type="submit" class="button py-2 px-4 rounded-lg shadow-sm text-sm font-medium">
+            <i class="bi bi-save mr-2"></i>Enregistrer
+        </button>
+        {{ form_end(form) }}
+
+    </div>
+</div>
+<script>
+    function updateFileName(input) {
+        const fileNameElement = document.getElementById('file-name');
+        if (input.files && input.files[0]) {
+            fileNameElement.textContent = input.files[0].name;
+        } else {
+            fileNameElement.textContent = "Aucun fichier choisi";
+        }
+    }
+
+    function removeImage() {
+        document.querySelector('.file-input').value = '';
+        document.getElementById('image-preview').innerHTML = '<div class="border-4 border-dashed border-gray-200 rounded-lg p-6 flex items-center justify-center"><i class="bi bi-image text-6xl text-gray-300"></i></div>';
+        document.getElementById('file-name').textContent = "Aucun fichier choisi"; // Reset the file name
+    }
+
+    // Pour le toggle switch
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('hotel_est_disponible');
+        if (checkbox.checked) {
+            checkbox.parentElement.classList.add('bg-blue-600');
+        } else {
+            checkbox.parentElement.classList.add('bg-gray-300');
+        }
+        
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                this.parentElement.classList.remove('bg-gray-300');
+                this.parentElement.classList.add('bg-blue-600');
+            } else {
+                this.parentElement.classList.remove('bg-blue-600');
+                this.parentElement.classList.add('bg-gray-300');
+            }
+        });
+    });
+</script>
+{% endblock %}

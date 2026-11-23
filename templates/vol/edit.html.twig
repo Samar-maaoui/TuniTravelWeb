@@ -1,0 +1,18 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Modifier le vol{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Modifier le vol</h1>
+
+        <div class="card shadow p-4">
+            {{ include('vol/_form.html.twig', { 'button_label': 'Mettre à jour' }) }}
+        </div>
+
+        <div class="d-flex gap-2 mt-3">
+            <a href="{{ path('app_vol_index') }}" class="btn btn-secondary">← Retour à la liste</a>
+            
+        </div>
+    </div>
+{% endblock %}

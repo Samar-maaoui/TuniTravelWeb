@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gemini Chatbot</title>
+</head>
+<body>
+    <div id="helpBotContainer">
+        <button id="helpBotToggle">Ouvrir le Chatbot</button>
+        <div id="helpBotWindow" style="display: none;">
+            <div id="helpBotHeader">
+                <span>Aide instantanée</span>
+                <button id="helpBotClose">✖</button>
+            </div>
+            <div id="helpBotChat">
+                <div id="helpBotMessages">
+                    <!-- messages affichés ici -->
+                </div>
+                <input type="text" id="helpBotInput" placeholder="Écris ta question...">
+                <button id="helpBotSend">Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Afficher / Cacher le bot
+    document.getElementById('helpBotToggle').onclick = () => {
+        document.getElementById('helpBotWindow').style.display = 'block';
+    };
+
+    document.getElementById('helpBotClose').onclick = () => {
+        document.getElementById('helpBotWindow').style.display = 'none';
+    };
+
+    // Envoyer le message
+    document.getElementById('helpBotSend').onclick = async () => {
+        const input = document.getElementById('helpBotInput');
+        const messages = document.getElementById('helpBotMessages');
+        const userText = input.value.trim();
+
+        if (userText !== '') {
+            messages.innerHTML += `<div><strong>Vous:</strong> ${userText}</div>`;
+            input.value = '';
+
+            try {
+                const res = await fetch('{{ path('chat') }}', {  // Correct URL for 'chat' route
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: userText
+                    })
+                });
+
+                if (!res.ok) {
+                    throw new Error('Request failed with status ' + res.status);
+                }
+
+                const data = await res.json();
+                const botResponse = data.botResponse || "Désolé, aucune réponse.";
+                messages.innerHTML += `<div><strong>Bot:</strong> ${botResponse}</div>`;
+                messages.scrollTop = messages.scrollHeight;
+            } catch (err) {
+                messages.innerHTML += `<div><strong>Bot:</strong> Erreur de communication.</div>`;
+                console.error('Error:', err);  // Log the error to the console for debugging
+            }
+        }
+    };
+    </script>
+</body>
+</html>

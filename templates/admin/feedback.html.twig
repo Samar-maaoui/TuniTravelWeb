@@ -1,0 +1,228 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block title %}Gestion des Feedbacks - Admin{% endblock %}
+
+{% block body %}
+<div class="pagetitle">
+    <h1>Gestion des Feedbacks</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('admin_users_list') }}">Accueil</a></li>
+            <li class="breadcrumb-item active">Feedbacks</li>
+        </ol>
+    </nav>
+</div>
+
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Liste des Feedbacks</h5>
+                    
+                    <!-- Stats Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Répartition des notes</h5>
+                                    <div class="chart-container" style="position: relative; height:250px;">
+                                        <canvas id="feedbackChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">Statistiques détaillées</h5>
+                                    <div class="row">
+                                        {% for i in 1..5 %}
+                                            <div class="col-12 mb-2">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-2">
+                                                        {% for star in 1..i %}
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        {% endfor %}
+                                                    </div>
+                                                    <div class="progress flex-grow-1" style="height: 20px;">
+                                                        <div class="progress-bar" 
+                                                             style="width: {{ (stats.data[i-1]/feedbacks|length)*100 }}%; 
+                                                                    background-color: {{ ['#FF6384','#FF9F40','#FFCD56','#4BC0C0','#36A2EB'][i-1] }}">
+                                                            {{ stats.data[i-1] }} feedbacks
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <h4>Moyenne: {{ average_rating|number_format(1) }}/5</h4>
+                                        <p class="text-muted">Sur {{ feedbacks|length }} feedbacks au total</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group mb-3">
+                                <form method="get" action="{{ path('admin_feedback_search') }}" class="d-flex w-100">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="q" 
+                                           placeholder="Rechercher des feedbacks..."
+                                           value="{{ searchTerm ?? '' }}"
+                                           oninput="this.form.submit()">
+                                    <button class="btn btn-outline-secondary" type="submit">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Table -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Utilisateur</th>
+                                    <th>Note</th>
+                                    <th>Commentaire</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for feedback in feedbacks %}
+                                <tr>
+                                    <td>
+                                        {% if feedback.utilisateur %}
+                                            <strong>{{ feedback.utilisateur.prenom }} {{ feedback.utilisateur.nom }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ feedback.utilisateur.email }}</small>
+                                        {% else %}
+                                            <span class="text-muted">Anonyme</span>
+                                        {% endif %}
+                                    </td>
+                                        <td>
+                {% for i in 1..5 %}
+                    {% if i <= feedback.note %}
+                        <i class="fas fa-star text-warning"></i>
+                    {% else %}
+                        <i class="far fa-star text-secondary"></i>
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+                {{ feedback.commentaire|slice(0, 50) }}
+                {% if feedback.commentaire|length > 50 %}...{% endif %}
+            </td>
+            <td>{{ feedback.dateFeedback|date('d/m/Y H:i') }}</td>
+                                   <td>
+                <a href="#" class="btn btn-sm btn-outline-danger"
+                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce feedback?') ? window.location.href='{{ path('admin_feedback_delete', {'id': feedback.id}) }}' : false">
+                    <i class="bi bi-trash"></i> Supprimer
+                </a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6" class="text-center">Aucun feedback trouvé</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .table th {
+        background-color: #4154f1;
+        color: white;
+    }
+    .table-primary {
+        --bs-table-bg: #f6f9ff;
+    }
+    .text-warning {
+        color: #ffc107 !important;
+    }
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+    }
+    .card-title {
+        font-weight: 600;
+        color: #4154f1;
+    }
+    .bg-light {
+        background-color: #f8f9fa !important;
+    }
+    .rounded {
+        border-radius: 0.5rem !important;
+    }
+    .chart-container {
+        margin: 0 auto;
+        max-width: 300px;
+    }
+    .progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: #fff;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('feedbackChart');
+    
+    {% if stats is defined %}
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: {{ stats.labels|json_encode|raw }},
+            datasets: [{
+                data: {{ stats.data|json_encode|raw }},
+                backgroundColor: [
+                    '#FF6384',
+                    '#FF9F40',
+                    '#FFCD56',
+                    '#4BC0C0',
+                    '#36A2EB'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.label}: ${context.raw} feedbacks (${context.percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+});
+</script>
+{% endblock %}

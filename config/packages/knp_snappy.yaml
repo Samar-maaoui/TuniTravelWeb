@@ -1,0 +1,10 @@
+# config/packages/knp_snappy.yaml
+knp_snappy:
+    pdf:
+        enabled: true
+        binary: '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"'  # Notez les guillemets doubles pour les espaces
+        options:
+            encoding: 'utf-8'  # Essential pour les caractères spéciaux
+            # 'disable-javascript': true  # Optionnel
+    image:
+        enabled: false  # Désactivé sauf si nécessaire

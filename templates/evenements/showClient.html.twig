@@ -1,0 +1,116 @@
+{% block body %}
+<div class="event-background" style="background-image: url('{{ asset('images/' ~ evenement.getImage) }}');">
+
+  <section class="section section-lg bg-default">
+    <div class="container">
+      
+      <div class="event-details">
+        <!-- Left Section: Event Name, Description, Details -->
+        <div class="left-content">
+          <h4>{{ evenement.nom }}</h4>  
+          <p class="description" style="color:black;">{{ evenement.description }}</p>
+
+          <ul class="event-info" style="color: black;">
+            <li><strong>Lieu:</strong> {{ evenement.lieu }}</li>
+            <li><strong>Capacité:</strong> {{ evenement.capacite }}</li>
+            <li><strong>Type:</strong> {{ evenement.type }}</li>
+            <li><strong>Organisateur:</strong> {{ evenement.organisateur }}</li>
+            <li><strong>Prix:</strong> {{ evenement.prix }} TND</li>
+          </ul>
+        </div>
+
+        <!-- Right Section: Event Image -->
+        <div class="right-content">
+          <h5 class="text-spacing-200 text-capitalize">{{ evenement.dateEvenement ? evenement.dateEvenement|date('d-m-Y') : '' }}</h5>
+          <br><br>
+          <img src="{{ asset('images/' ~ evenement.getImage) }}" alt="{{ evenement.nom }}" width="435" height="418"/>
+        </div>
+      </div>
+
+      <!-- Reservation Button -->
+      <div class="button-container">
+        <a class="button button-xl button-primary button-winona" href="{{ path('reservation_new', {'id': evenement.id}) }}">Reserver</a>
+
+      </div>
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+  
+  .container {
+      background: rgba(255, 255, 255, 0.8);
+      margin: 20px;
+      border-radius: 10px;
+      position: relative;
+      z-index: 1;
+  }
+
+  .event-details {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top:5px;
+      align-items: center;
+      justify-content: space-between;
+  }
+
+  .left-content {
+      flex: 1;
+      min-width: 300px;
+      padding-right: 20px;
+  }
+
+  .event-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+  }
+
+  .description {
+      max-width: 500px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      margin-bottom: 20px;
+  }
+
+  .event-info {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+  }
+
+  .event-info li {
+      font-size: 16px;
+      padding: 5px 0;
+      border-bottom: 1px solid #ddd;
+  }
+
+  .right-content {
+      flex: 1;
+      text-align: center;
+  }
+
+  .right-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+  }
+
+  .button-container {
+      text-align: center;
+      margin-top: 30px;
+  }
+
+  .button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      text-decoration: none;
+  }
+</style>
+{% endblock %}

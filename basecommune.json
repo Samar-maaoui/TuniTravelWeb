@@ -1,0 +1,118 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"basecommune"},
+{"type":"table","name":"evenements","database":"basecommune","data":
+[
+{"id_evenement":"1","nom":"Forum de l’Innovation","lieu":"Esprit, Ariana","date_evenement":"2025-06-18","capacite":"389","type":"CONFÉRENCE","organisateur":"Esprit Innovation Hub","description":"Un forum dédié aux nouv technologies et à l’innovation en Tunisie.","prix":"120"},
+{"id_evenement":"2","nom":"Gala de la Culture","lieu":"Ministère de la Culture, Monastir","date_evenement":"2025-08-25","capacite":"1500","type":"CONCERT","organisateur":"Ministère de la Culture","description":"Une soirée de célébellesration des artistes et de la culture tunisienne.","prix":"70"},
+{"id_evenement":"3","nom":"Atelier Leadership Jeunes","lieu":"Nabeul","date_evenement":"2025-05-30","capacite":"198","type":"SÉMINAIRE","organisateur":"Youth Empowerment Tunisia","description":"Un atelier interactif pour développer le leadership des jeunes leaders tunisiens.","prix":"30"},
+{"id_evenement":"4","nom":"Tournoi International de Tennis","lieu":"France","date_evenement":"2025-10-15","capacite":"5000","type":"SPORT","organisateur":"Fédération Internationale de Tennis","description":"Un tournoi de tennis regroupant des joueurs professionnels de plusieurs pays.","prix":"250"},
+{"id_evenement":"5","nom":"Salon de l’Entrepreneuriat","lieu":"Sfax","date_evenement":"2025-09-05","capacite":"800","type":"CONFÉRENCE","organisateur":"Sfax Business Leaders","description":"Une conférence et exposition sur les opportunités entrepreneuriales en Tunisie.","prix":"100"},
+{"id_evenement":"6","nom":"Festival du Sahara","lieu":"Douz","date_evenement":"2025-12-20","capacite":"3000","type":"CONCERT","organisateur":"Office National du Tourisme Tunisien","description":"Un festival mettant en avant la culture et les traditions du sud tunisien.","prix":"50"},
+{"id_evenement":"7","nom":"Hackathon International","lieu":"Dubaï","date_evenement":"2025-11-22","capacite":"600","type":"SÉMINAIRE","organisateur":"Global Tech Community","description":"Un hackathon avec des participants du monde entier pour développer des solutions innovantes.","prix":"0"},
+{"id_evenement":"8","nom":"Match de Football Amical","lieu":"Tunis","date_evenement":"2025-07-15","capacite":"25000","type":"SPORT","organisateur":"Fédération Tunisienne de Football","description":"Un match amical entre deux grandes équipes africaines.","prix":"180"}
+]
+}
+,{"type":"table","name":"excursion","database":"basecommune","data":
+[
+{"id_excursion":"5","nom":"Dream Camping","lieu":"Tozeur","prix":"50.00","date_depart":"2025-03-20 00:00:00","date_retour":"2025-03-20 00:00:00","disponibilite":"1","description":"Tozeur","nombre_max_participants":"39","id_guide":"12","image":"Dream excursion_2025-03-20.png","ville_depart":"Sousse"},
+{"id_excursion":"6","nom":"Ain Drahem Excursion","lieu":"Ain Drahem","prix":"250.00","date_depart":"2025-03-20 00:00:00","date_retour":"2025-03-23 00:00:00","disponibilite":"1","description":"Venez avec nous !","nombre_max_participants":"7","id_guide":"13","image":"Ain Drahem Excursion_2025-03-20.jpeg","ville_depart":"Monastir"},
+{"id_excursion":"7","nom":"Mahdia Excursion","lieu":"Mahdia","prix":"30.00","date_depart":"2025-03-17 00:00:00","date_retour":"2025-03-17 00:00:00","disponibilite":"1","description":"Mahdia Excursion , n'hésitez pas de venir!","nombre_max_participants":"10","id_guide":"14","image":"Mahdia Excursion_2025-03-17.jpg","ville_depart":"Sfax"}
+]
+}
+,{"type":"table","name":"excursionstat","database":"basecommune","data":
+[
+
+]
+}
+,{"type":"table","name":"feedback","database":"basecommune","data":
+[
+
+]
+}
+,{"type":"table","name":"guide","database":"basecommune","data":
+[
+{"id_guide":"12","nom":"Omar","prenom":"Omar","disponibilite":"1","langues":"Espagnol","numeroTel":"53383365","email":"omar@gmail.com","image":"_.png"},
+{"id_guide":"13","nom":"Mouna","prenom":"Abid","disponibilite":"1","langues":"Français, Anglais, Espagnol","numeroTel":"98383364","email":"mouna@gmail.com","image":"Mouna_Abid.jpg"},
+{"id_guide":"14","nom":"Samer","prenom":"Khedhri","disponibilite":"1","langues":"Anglais, Espagnol","numeroTel":"85214778","email":"samer@gmail.com","image":"Samer_Khedhri.jpg"}
+]
+}
+,{"type":"table","name":"hotel","database":"basecommune","data":
+[
+{"id_hotel":"1","nom":"Hôtel Paradise","prix_nuit":"120.50","est_disponible":"1","adresse":"123 Rue de Paris, Paris, France","description":"Un hôtel de luxe avec piscine et spa.","tel":"01456893","email_contact":"contact@hotelparadise.fr","image_hotel":"paradise.jpg"},
+{"id_hotel":"2","nom":"Hôtel Ocean View","prix_nuit":"90.75","est_disponible":"1","adresse":"456 Beach Avenue, Nice, France","description":"Un hôtel avec vue sur la mer.","tel":"04986543","email_contact":"contact@hotel-oceanview.fr","image_hotel":"oceanview.jpg"},
+{"id_hotel":"3","nom":"Hôtel Montagne","prix_nuit":"85.00","est_disponible":"0","adresse":"789 Mountain Road, Chamonix, France","description":"Un hôtel au pied des montagnes, parfait pour les randonneurs.","tel":"04567891","email_contact":"contact@hotelmontagne.fr","image_hotel":"montagne.jpg"}
+]
+}
+,{"type":"table","name":"packvoyage","database":"basecommune","data":
+[
+{"id_pack":"3","admin_id":"3","vol_id":"30","hotel_id":"3","excursion_id":"5","prix_total":"150.00","details":"innoubliable","nombre_places_restants":"3","nomPack":"firstpack","image_url":"japon.jpg"},
+{"id_pack":"4","admin_id":"3","vol_id":"29","hotel_id":"1","excursion_id":"6","prix_total":"220.00","details":"aa","nombre_places_restants":"2","nomPack":"second","image_url":"suisse.png"}
+]
+}
+,{"type":"table","name":"post","database":"basecommune","data":
+[
+{"id_post":"4","titre":"aaaa","description":"aa","date_publication":"2025-03-23 14:00:35","date_expiration":"2025-03-24 00:00:00","pack_id":"3","statut":"DISPONIBLE","image_url":"default.jpg"},
+{"id_post":"5","titre":"asssa","description":"aaa","date_publication":"2025-03-23 14:00:51","date_expiration":"2025-03-28 00:00:00","pack_id":"4","statut":"DISPONIBLE","image_url":"default.jpg"}
+]
+}
+,{"type":"table","name":"reservation","database":"basecommune","data":
+[
+{"id_reservation":"1","utilisateur_id":"1","date_reservation":"2025-03-06","statut":"CONFIRMEE","montant_total":"90.00"},
+{"id_reservation":"2","utilisateur_id":"1","date_reservation":"2025-03-06","statut":"CONFIRMEE","montant_total":"50.00"},
+{"id_reservation":"7","utilisateur_id":"5","date_reservation":"2025-03-06","statut":"CONFIRMEE","montant_total":"200.00"},
+{"id_reservation":"8","utilisateur_id":"1","date_reservation":"2025-03-06","statut":"CONFIRMEE","montant_total":"750.00"}
+]
+}
+,{"type":"table","name":"reservationevenement","database":"basecommune","data":
+[
+{"id_reservation":"1","evenement_id":"1","nombre_places":"2","id_utilisateur":"1","date_reservation":"2025-03-06 02:12:26"},
+{"id_reservation":"2","evenement_id":"1","nombre_places":"3","id_utilisateur":"1","date_reservation":"2025-03-06 03:32:27"},
+{"id_reservation":"3","evenement_id":"1","nombre_places":"2","id_utilisateur":"1","date_reservation":"2025-03-06 04:11:11"},
+{"id_reservation":"4","evenement_id":"1","nombre_places":"1","id_utilisateur":"1","date_reservation":"2025-03-06 11:49:29"},
+{"id_reservation":"5","evenement_id":"3","nombre_places":"2","id_utilisateur":"1","date_reservation":"2025-03-06 13:25:04"},
+{"id_reservation":"6","evenement_id":"1","nombre_places":"3","id_utilisateur":"1","date_reservation":"2025-03-06 14:10:26"}
+]
+}
+,{"type":"table","name":"reservationexcursion","database":"basecommune","data":
+[
+{"id_reservation":"2","excursion_id":"5","guide_id":null,"nbr_place_reservee":"1"},
+{"id_reservation":"8","excursion_id":"6","guide_id":null,"nbr_place_reservee":"3"}
+]
+}
+,{"type":"table","name":"reservationhotel","database":"basecommune","data":
+[
+
+]
+}
+,{"type":"table","name":"reservationpackvoyage","database":"basecommune","data":
+[
+{"id_reservation":"59","utilisateur_id":"1","date_reservation":"2025-03-06 04:39:39","statut":"CONFIRMEE","statut_paiement":"PAYE","pack_id":"1","post_id":"1","places_demandees":"2","montant_total":"300.00"},
+{"id_reservation":"60","utilisateur_id":"1","date_reservation":"2025-03-06 08:30:12","statut":"CONFIRMEE","statut_paiement":"PAYE","pack_id":"1","post_id":"1","places_demandees":"1","montant_total":"150.00"},
+{"id_reservation":"61","utilisateur_id":"5","date_reservation":"2025-03-06 14:22:13","statut":"EN_ATTENTE","statut_paiement":"NON_PAYE","pack_id":"1","post_id":"1","places_demandees":"1","montant_total":"150.00"}
+]
+}
+,{"type":"table","name":"reservationvol","database":"basecommune","data":
+[
+{"id_reservation":"1","vol_id":"29","classe_service":"PREMIÈRE"},
+{"id_reservation":"2","vol_id":"32","classe_service":"ÉCONOMIE"}
+]
+}
+,{"type":"table","name":"utilisateur","database":"basecommune","data":
+[
+{"id_utilisateur":"1","nom":"mahdi","prénom":"nattour","cin":"11659578","email":"mahdi@stb.tn","mot_de_passe":"$2a$12$O1yb0C9K.KlpOuDHHo53zu.fuV9VOJ8rTUfpnuIi085O01TMsvJHG","adresse":"tunis","date_naissance":"2000-05-17","telephone":"95083056","type_Utilisateur":"VIP","is_verified":"1","date_creation":"2025-03-06 01:55:37"},
+{"id_utilisateur":"2","nom":"mahdi","prénom":"nattour","cin":"11111111","email":"mahdi@esprit.tn","mot_de_passe":"$2a$12$Mi4VlZq2tTOWhCNkr1Lhs.SNW\/ccgx5UlW\/SoIAa.GGMcsYs\/gAdq","adresse":"tunis","date_naissance":"2001-03-06","telephone":"11111111","type_Utilisateur":"Admin","is_verified":"1","date_creation":"2025-03-06 02:18:51"},
+{"id_utilisateur":"3","nom":"atmen","prénom":"abidi","cin":"14510239","email":"Aymen.ABIDI@esprit.tn","mot_de_passe":"$2a$12$og2jlmqyPsCFxnVDeB6fUet2GmCnKxRq2M.mt1VJ60z1z0rg5WwRS","adresse":"menzah 6","date_naissance":"2001-07-10","telephone":"50353631","type_Utilisateur":"Admin","is_verified":"1","date_creation":"2025-03-06 07:08:16"},
+{"id_utilisateur":"5","nom":"aymen","prénom":"aymen","cin":"11223344","email":"abidiaymen6163@gmail.com","mot_de_passe":"$2a$12$8c7UOADFf97r3HgzDcWxeeJl22IyvTosl6OUkRot.7ZeqSlyiNhPG","adresse":"tunis","date_naissance":"2000-03-14","telephone":"50353630","type_Utilisateur":"Normal","is_verified":"1","date_creation":"2025-03-06 11:42:00"}
+]
+}
+,{"type":"table","name":"vol","database":"basecommune","data":
+[
+{"id_vol":"29","numero_vol":"AAL3112","compagnie":"LAair","prix":"400.00","disponible":"10","aero_depart":"Los Angeles International Airport","aero_arrivee":"test","date_depart":"2025-03-28","date_arrivee":"2025-04-05"},
+{"id_vol":"30","numero_vol":"TU0246","compagnie":"tunisair","prix":"50.00","disponible":"1","aero_depart":"Tunis-Carthage International Airport","aero_arrivee":"test","date_depart":"2025-03-29","date_arrivee":"2025-04-05"},
+{"id_vol":"31","numero_vol":"WW321","compagnie":"Tunisiar","prix":"20.80","disponible":"5","aero_depart":"dcqk dczc","aero_arrivee":"frvgev bdgd","date_depart":"2025-04-04","date_arrivee":"2025-04-06"},
+{"id_vol":"32","numero_vol":"SS654","compagnie":"TURKISH","prix":"12.52","disponible":"3","aero_depart":"abvd","aero_arrivee":"aaa","date_depart":"2025-03-06","date_arrivee":"2025-03-21"},
+{"id_vol":"33","numero_vol":"AF1234","compagnie":"air france","prix":"20.00","disponible":"10","aero_depart":"Los Angeles International Airport","aero_arrivee":"test","date_depart":"2025-04-04","date_arrivee":"2025-04-08"}
+]
+}
+]

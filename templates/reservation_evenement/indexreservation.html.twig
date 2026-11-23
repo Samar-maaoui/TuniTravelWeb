@@ -1,0 +1,62 @@
+{% extends 'basereservation.html.twig' %}
+
+{% block body %}
+
+    <div class="row">
+        {% for reservation_evenement in reservation_evenements %}
+        {% if app.user == reservation_evenement.getUtilisateur %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ reservation_evenement.evenement.nom }}</h5>
+                        <p class="card-text">
+                            <strong>Nom:</strong> {{ reservation_evenement.utilisateur.nom }} <br>
+                            <strong>Prénom:</strong> {{ reservation_evenement.utilisateur.prenom }} <br>
+                            <strong>Email:</strong> {{ reservation_evenement.utilisateur.email }} <br>
+                            <strong>Phone:</strong> {{ reservation_evenement.utilisateur.telephone }} <br>
+                            <strong>Nombre de places:</strong> {{ reservation_evenement.nombrePlaces }} <br>
+                            <strong>Date de réservation:</strong> {{ reservation_evenement.dateReservation ? reservation_evenement.dateReservation|date('Y-m-d H:i:s') : '' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+     
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #495057;
+        }
+
+        .my-4 {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+
+
+{% endblock %}

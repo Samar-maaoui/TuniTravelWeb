@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Réservation Hôtel #{{ reservation.idReservation }}</title>
+    <style>
+        /* Style cohérent avec votre interface web */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0a1a2f;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(10, 26, 47, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #d4af37;
+            overflow: hidden;
+        }
+     
+        .header {
+            background: #1a2f4f;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #d4af37;
+        }
+        
+        .header img {
+            max-width: 100px; /* Ajustez la taille du logo */
+            margin-bottom: 10px; /* Espace entre le logo et le titre */
+        }
+        
+        .header h1 {
+            color: #d4af37;
+            margin: 0;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+        
+        .reservation-id {
+            color: #a0a0a0;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .reservation-details {
+            padding: 20px;
+        }
+        
+        .detail-row {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            display: flex;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            color: #d4af37;
+            font-weight: bold;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+        
+        .detail-value {
+            flex-grow: 1;
+        }
+        
+        .total-price {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: #1a2f4f;
+            border-top: 1px solid #d4af37;
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+        
+        /* Améliorations spécifiques PDF */
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ absolute_url(asset('assets/img/logo 1.png')) }}" alt="Logo">            <h1>CONFIRMATION DE RÉSERVATION</h1>
+            <div class="reservation-id">N° {{ reservation.idReservation }}</div>
+        </div>
+        
+        <div class="reservation-details">
+            <div class="detail-row">
+                <div class="detail-label">Hôtel</div>
+                <div class="detail-value">{{ reservation.hotel.nom }}</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Dates</div>
+                <div class="detail-value">
+                    Du {{ reservation.checkInDate|date('d/m/Y') }} 
+                    au {{ reservation.checkOutDate|date('d/m/Y') }}
+                    ({{ reservation.checkOutDate.diff(reservation.checkInDate).days }} nuits)
+                </div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Type de chambre</div>
+                <div class="detail-value">{{ reservation.typeChambre }}</div>
+            </div>
+            
+            <div class="detail-row">
+                <div class="detail-label">Prix total</div>
+                <div class="detail-value total-price">{{ reservation.prixTotal }} TND</div>
+ </div>
+        </div>
+        
+        <div class="footer">
+            <p>Document généré le {{ "now"|date('d/m/Y à H:i') }} | Votre référence: {{ reservation.idReservation }}</p>
+        </div>
+    </div>
+</body>
+</html>

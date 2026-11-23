@@ -1,0 +1,51 @@
+{# templates/reservation_vol/pdf_template.html.twig #}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Réservation de Vol - {{ reservationvol.vol.numeroVol }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .reservation-details {
+            margin-top: 30px;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .details-table th, .details-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .details-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Confirmation de Réservation de Vol</h1>
+
+    <div class="reservation-details">
+        <p><strong>Numéro de Vol:</strong> {{ reservationvol.vol.numeroVol }}</p>
+        <p><strong>Compagnie:</strong> {{ reservationvol.vol.compagnie }}</p>
+        <p><strong>Classe de Service:</strong> {{ reservationvol.classeService }}</p>
+        <p><strong>Aéroport de Départ:</strong> {{ reservationvol.vol.aeroDepart }}</p>
+        <p><strong>Aéroport d'Arrivée:</strong> {{ reservationvol.vol.aeroArrivee }}</p>
+        <p><strong>Date de Départ:</strong> {{ reservationvol.vol.dateDepart|date('d/m/Y H:i') }}</p>
+        <p><strong>Date d'Arrivée:</strong> {{ reservationvol.vol.dateArrivee|date('d/m/Y H:i') }}</p>
+        <p><strong>Prix:</strong> {{ reservationvol.vol.prix }} TND</p>
+    </div>
+
+</body>
+</html>

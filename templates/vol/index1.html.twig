@@ -1,0 +1,61 @@
+{% extends 'baseclient.html.twig' %}
+{% block body %}
+    <h1>Vol index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Numero_vol</th>
+                <th>Compagnie</th>
+                <th>Prix</th>
+                <th>Disponible</th>
+                <th>Aero_depart</th>
+                <th>Aero_arrivee</th>
+                <th>Date_depart</th>
+                <th>Date_arrivee</th>
+                <th>ClasseService</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vol in vols %}
+            <tr>
+                <td>{{ vol.numeroVol }}</td>
+                <td>{{ vol.compagnie }}</td>
+                <td>{{ vol.prix }}</td>
+                <td>{{ vol.disponible }}</td>
+                <td>{{ vol.aeroDepart }}</td>
+                <td>{{ vol.aeroArrivee }}</td>
+                <td>{{ vol.dateDepart ? vol.dateDepart|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ vol.dateArrivee ? vol.dateArrivee|date('Y-m-d H:i:s') : '' }}</td>
+                
+                <td>
+                    {% if app.user %}
+                        <form action="{{ path('app_reservation_vol_from_vol', { id_vol: vol.idVol }) }}" method="get">
+                            <select name="classe" class="form-select form-select-sm">
+                                <option value="ÉCONOMIE">ÉCONOMIE</option>
+                                <option value="AFFAIRES">AFFAIRES</option>
+                                <option value="PREMIÈRE">PREMIÈRE</option>
+                            </select>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if app.user %}
+                            <button class="btn btn-sm btn-primary" type="submit">Réserver</button>
+                        </form>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn btn-secondary btn-sm">Se connecter</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

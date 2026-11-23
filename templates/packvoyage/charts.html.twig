@@ -1,0 +1,14 @@
+{% macro gc_draw(chart) %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable({{ chart.data.toJson()|raw }});
+            var options = {{ chart.options.toJson()|raw }};
+            var chart = new google.visualization.{{ chart.type }}(document.getElementById('chart_{{ chart.html_container_id }}'));
+            chart.draw(data, options);
+        }
+    </script>
+    <div id="chart_{{ chart.html_container_id }}" style="width: {{ chart.options.width|default('900') }}px; height: {{ chart.options.height|default('500') }}px;"></div>
+{% endmacro %}

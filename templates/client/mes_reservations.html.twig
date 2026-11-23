@@ -1,0 +1,113 @@
+{% extends 'basereservation.html.twig' %}
+
+
+
+
+
+{% block body %}
+<style>
+    .reservation-container {
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 1000px;
+        margin: 40px auto;
+        overflow: visible !important;
+        position: relative;
+    }
+
+    .dropdown-menu {
+        z-index: 3000 !important;
+    }
+</style>
+
+<div class="container reservation-container">
+    {% if app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ app.flashes('success')|first }}
+        </div>
+    {% endif %}
+
+    {% if app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ app.flashes('error')|first }}
+        </div>
+    {% endif %}
+
+    <h2 class="mb-4 text-center">Mes réservations de packs</h2>
+
+    {% if reservations is empty %}
+        <div class="alert alert-warning text-center">
+            Vous n'avez effectué aucune réservation pour le moment.
+        </div>
+    {% else %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Nom & Prénom</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Nom du Pack</th>
+                    <th>Statut</th>
+                    <th>Paiement</th>
+                    <th>Places</th>
+                    <th>Montant</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.utilisateur.nom }} {{ reservation.utilisateur.prenom }}</td>
+                        <td>{{ reservation.utilisateur.email }}</td>
+                        <td>{{ reservation.dateReservation ? reservation.dateReservation|date('Y-m-d H:i') : '' }}</td>
+                        <td>
+                            {% if reservation.packVoyage is not null %}
+                                {{ reservation.packVoyage.nomPack }}
+                            {% else %}
+                                <em>Pack supprimé</em>
+                            {% endif %}
+                        </td>
+                        <td>{{ reservation.statut }}</td>
+                        <td>{{ reservation.statutPaiement }}</td>
+                        <td>{{ reservation.placesDemandees }}</td>
+                        <td>{{ reservation.montantTotal }} TND</td>
+                        <td>
+                            {% if reservation.statut == 'EN_ATTENTE' %}
+                                <button type="button" class="btn btn-warning btn-sm" onclick="ouvrirPopupPaypal({{ reservation.idReservation }})">
+                                    Payer
+                                </button>
+                            {% else %}
+                                <span class="text-success">Déjà payé</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+
+
+function ouvrirPopupPaypal(idReservation) {
+    const url = '/reservationpackvoyage/payer/' + idReservation;
+    const popup = window.open(url, 'paypal_popup', 'width=600,height=700');
+
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+        alert("Veuillez autoriser les pop-ups pour ce site.");
+    }
+}
+
+// Correction Bootstrap Dropdown (dans le cas où il ne se monte pas automatiquement)
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function (dropdownToggleEl) {
+        new bootstrap.Dropdown(dropdownToggleEl);
+    });
+});
+</script>
+{% endblock %}

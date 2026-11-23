@@ -1,0 +1,71 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 30px;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        color: #333333;
+    }
+
+    h2 {
+        color: #5832E6;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    ul {
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 6px;
+    }
+
+    .footer {
+        margin-top: 25px;
+        font-size: 14px;
+        color: #777777;
+    }
+
+    .section-title {
+        margin-top: 25px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #444;
+    }
+</style>
+
+<div class="container">
+    <h2>🎉 Réservation confirmée</h2>
+
+    <p>Bonjour {{ reservation.utilisateur.nom|capitalize }},</p>
+
+    <p>Merci pour votre réservation. Voici un récapitulatif complet :</p>
+
+    <div class="section-title">🧾 Détails de la réservation :</div>
+    <ul>
+        <li><strong>Date de réservation :</strong> {{ reservation.dateReservation|date('d/m/Y H:i') }}</li>
+        <li><strong>Nombre de places :</strong> {{ reservation.placesDemandees }}</li>
+        <li><strong>Montant total :</strong> {{ reservation.montantTotal }} TND</li>
+        <li><strong>Statut :</strong> {{ reservation.statut }}</li>
+    </ul>
+
+    {% set pack = post.packvoyage %}
+
+    <div class="section-title">📦 Détails du pack voyage :</div>
+    <ul>
+        <li><strong>Nom du pack :</strong> {{ pack.nomPack }}</li>
+        <li><strong>Description :</strong> {{ post.description }}</li>
+    </ul>
+
+    <p class="footer">Nous vous souhaitons un excellent voyage !</p>
+</div>

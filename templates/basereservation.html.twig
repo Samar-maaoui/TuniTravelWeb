@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        <link rel="icon" href="{{ asset('assetsC/images/favicon.ico') }}" type="image/x-icon">
+    
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:200,400%7CLato:300,400,300italic,700%7CMontserrat:900">
+        <link rel="stylesheet" href="{{ asset('assetsC/css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ asset('assetsC/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('assetsC/css/fonts.css') }}">
+        <!-- Google Fonts -->
+        <link href="https://fonts.gstatic.com" rel="preconnect">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+        <!-- Vendor CSS Files -->
+        <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
+
+        <!-- Template Main CSS File -->
+        <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
+        
+        <style>
+            /* Full page background and base styles */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+            }
+            
+            body {
+                background: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center fixed;
+                background-size: cover;
+                position: relative;
+                color: #F8F8F8;
+            }
+            
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(10, 26, 47, 0.85);
+                z-index: -1;
+            }
+            
+            /* Color variables */
+            :root {
+                --gold: #D4AF37;
+                --dark-gold: #B8860B;
+                --dark-blue: #0A1A2F;
+                --light-blue: #1E3A8A;
+                --black: #121212;
+                --white: #F8F8F8;
+            }
+            
+            /* Header styles */
+            .header {
+                background-color: rgba(10, 26, 47, 0.9);
+                border-bottom: 1px solid var(--gold);
+            }
+            
+            .logo span {
+                color: var(--gold);
+                font-family: 'Playfair Display', serif;
+                font-weight: 700;
+            }
+            
+            /* Navigation styles */
+            .main-nav ul {
+                display: flex;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            
+            .main-nav li {
+                margin: 0 1rem;
+            }
+            
+            .main-nav a {
+                color: var(--white);
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.3s;
+                padding: 0.5rem 1rem;
+                border-radius: 3px;
+            }
+            
+            .main-nav a:hover, 
+            .main-nav .active a {
+                color: var(--gold);
+                background: rgba(212, 175, 55, 0.1);
+            }
+            
+            /* Main content area */
+            main {
+                min-height: calc(100vh - 120px);
+                padding-top: 80px;
+                background: transparent;
+            }
+            
+            /* Luxury section styles */
+            .luxury-section {
+                background-color: transparent;
+                color: var(--white);
+                padding: 5rem 0;
+                position: relative;
+            }
+            
+            .luxury-title {
+                font-family: 'Playfair Display', serif;
+                color: var(--gold);
+                font-size: 3.5rem;
+                margin-bottom: 2rem;
+                text-align: center;
+                position: relative;
+                display: inline-block;
+            }
+            
+            .luxury-title::after {
+                content: "";
+                position: absolute;
+                bottom: -15px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100px;
+                height: 3px;
+                background: var(--gold);
+            }
+            
+            .luxury-subtitle {
+                color: var(--gold);
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+            
+            .luxury-card {
+                background: rgba(10, 26, 47, 0.8);
+                border: 1px solid var(--gold);
+                border-radius: 5px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                transition: all 0.3s ease;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            
+            .luxury-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            }
+            
+            .luxury-card-title {
+                color: var(--gold);
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+                font-weight: 600;
+            }
+            
+            .luxury-stats {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                margin: 3rem 0;
+            }
+            
+            .stat-item {
+                text-align: center;
+                padding: 1.5rem;
+                min-width: 200px;
+            }
+            
+            .stat-number {
+                font-size: 3rem;
+                font-weight: 700;
+                color: var(--gold);
+                margin-bottom: 0.5rem;
+                font-family: 'Playfair Display', serif;
+            }
+            
+            .stat-label {
+                color: var(--white);
+                font-size: 1.1rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            
+            .luxury-btn {
+                background: var(--gold);
+                color: var(--dark-blue);
+                border: none;
+                padding: 12px 30px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-radius: 3px;
+                transition: all 0.3s ease;
+                display: inline-block;
+                margin-top: 1rem;
+            }
+            
+            .luxury-btn:hover {
+                background: var(--dark-gold);
+                color: var(--white);
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            }
+            
+            /* Chart Styles */
+            .chart-container {
+                position: relative;
+                height: 300px;
+                margin: 3rem auto;
+                max-width: 800px;
+            }
+            
+            /* Footer styles */
+            .page-footer {
+                background-color: var(--dark-blue);
+                border-top: 1px solid var(--gold);
+                padding: 2rem 0;
+                color: var(--white);
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .luxury-title {
+                    font-size: 2.5rem;
+                }
+                
+                .luxury-stats {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                
+                .stat-item {
+                    margin-bottom: 1.5rem;
+                }
+                
+                .main-nav ul {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                
+                .main-nav li {
+                    margin: 0.5rem 0;
+                }
+            }
+            :root {
+                --gold: #D4AF37;
+                --dark-gold: #B8860B;
+                --dark-blue: #0A1A2F;
+                --light-blue: #1E3A8A;
+                --black: #121212;
+                --white: #F8F8F8;
+            }
+            .sidebar {
+                width: 280px;
+                height: calc(100vh - 60px); /* Subtract navbar height */
+                position: fixed;
+                left: 0;
+                top: 60px; /* Position below navbar */
+                background: var(--dark-blue);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+                z-index: 999;
+                overflow-y: auto;
+                transition: all 0.3s ease;
+            }
+            
+            .nav-links {
+                list-style: none;
+                padding: 1rem;
+            }
+            
+            .nav-links li {
+                margin-bottom: 0.5rem;
+            }
+            
+            .nav-links a {
+                display: flex;
+                align-items: center;
+                color: var(--white);
+                padding: 0.8rem 1rem;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+                text-decoration: none;
+            }
+            
+            .nav-links a:hover {
+                background: rgba(212, 175, 55, 0.2);
+                color: var(--gold);
+            }
+            
+            .nav-links a i {
+                margin-right: 1rem;
+                font-size: 1.2rem;
+                width: 24px;
+                text-align: center;
+            }
+            
+            .nav-links a.active {
+                background: var(--gold);
+                color: var(--dark-blue);
+                font-weight: 600;
+            }
+            
+            /* Main content area */
+            .main-content {
+                margin-left: 280px;
+                padding: 20px;
+                transition: all 0.3s ease;
+            }
+            
+            /* Collapsed sidebar */
+            .sidebar.collapsed {
+                width: 80px;
+            }
+            
+            .sidebar.collapsed .nav-links a span {
+                display: none;
+            }
+            
+            .sidebar.collapsed .nav-links a {
+                justify-content: center;
+                padding: 0.8rem 0;
+            }
+            
+            .sidebar.collapsed .nav-links a i {
+                margin-right: 0;
+                font-size: 1.5rem;
+            }
+            
+            .sidebar.collapsed + .main-content {
+                margin-left: 80px;
+            }
+            
+            /* Tooltip for collapsed sidebar */
+            .nav-links li .tooltip {
+                display: none;
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                background: var(--dark-blue);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                white-space: nowrap;
+                margin-left: 15px;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            }
+            
+            .sidebar.collapsed .nav-links li:hover .tooltip {
+                display: block;
+            }
+            
+            /* Responsive adjustments */
+            @media (max-width: 992px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                }
+                
+                .sidebar.open {
+                    transform: translateX(0);
+                }
+                
+                .main-content {
+                    margin-left: 0;
+                }
+            }
+        </style>
+        {% endblock %}
+{% block header %}
+<!-- ======= Header ======= -->
+<header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+        <a href="/#hero" class="logo d-flex align-items-center">
+            <img src="assets/img/logopng1.png" alt="">
+            <span class="d-none d-lg-block">ITINIREVES</span>
+        </a>
+       
+    </div><!-- End Logo -->
+
+   
+
+    <nav class="header-nav ms-auto">
+        <ul class="d-flex align-items-center">
+
+           
+
+
+            <div class="main-nav">
+                <ul class="rd-navbar-nav">
+                    <li class="active"><a href="/#vols">Vols</a></li>
+                    <li><a href="/#events">Evenements</a></li>
+                    <li><a href="/#packs">packs</a></li>
+                    <li><a href="/#hotels">hotels</a></li>
+                    <li><a href="/#excursions">excursions</a></li>
+                    <li><a href="/#about">à propos</a></li>
+                </ul>
+            </div>
+          
+
+        {% if app.user %}
+<li class="nav-item dropdown pe-3">
+    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+        {% if app.user.photo %}
+            <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="Profile" class="rounded-circle" width="36" height="36">
+        {% else %}
+            <img src="{{ asset('assets/img/profile-img.jpg') }}" alt="Profile" class="rounded-circle" width="36" height="36">
+        {% endif %}
+        <span class="d-none d-md-block dropdown-toggle ps-2" style="color: white;">{{ app.user.prenom }}</span>
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+        <li class="dropdown-header">
+            <h6>{{ app.user.prenom }} {{ app.user.nom }}</h6>
+            <span>{{ app.user.typeUtilisateur }}</span>
+        </li>
+    
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center" href="/reservation">
+                <i class="bi bi-person"></i>
+                <span>Mes Reservation</span>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ path('app_profile') }}">
+                <i class="bi bi-person"></i>
+                <span>Mon Profil</span>
+            </a>
+        </li>
+         <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ path('app_feedback') }}">
+                <i class="fa fa-comment-dots"></i>
+                <span>Noter l'application</span>
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item d-flex align-items-center" href="{{ path('app_logout') }}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Déconnexion</span>
+            </a>
+        </li>
+    </ul>
+</li>
+{% else %}
+<li class="nav-item">
+<a href="{{ path('app_login') }}" class="nav-link auth-button">Sign In</a>
+</li>
+<li class="nav-item">
+<a href="{{ path('app_register') }}" class="nav-link auth-button">Sign Up</a>
+</li>
+{% endif %}
+
+
+
+
+        </ul>
+    </nav><!-- End Icons Navigation -->
+
+</header>               
+
+{% endblock %}
+{% block sidebar %}
+<br><br><br>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar" >
+    <ul class="nav-links">
+        <li>
+            <a href="/client_reservationevenement">
+                <i class="bi bi-calendar-event"></i>
+                <span>Evenements</span>
+                <span class="tooltip">Evenements</span>
+            </a>
+        </li>
+        <li>
+    <a href="/mes-reservations">
+        <i class="bi bi-globe2"></i>
+        <span>Pack Voyage</span>
+        <span class="tooltip">Pack Voyage</span>
+    </a>
+</li>
+
+            <a href="{{ path('afficher_reservation') }}">
+                <i class="fa fa-hotel"></i> {# Icône hôtels via Font Awesome #}
+                <span>Mes Réservations Hôtels</span>
+                <span class="tooltip">Hôtels</span>
+            </a>
+        </li>
+            <a href="/mes-reservationsExcursions">
+<i class="fa-solid fa-list"></i>               <span>Excursions</span>
+                <span class="tooltip">Excursions</span>
+            </a>
+        </li>
+
+         <li>
+            <a href="{{ path('app_reservation_vol_index') }}">
+                <i class="fa fa-plane"></i> {# Icône avion correcte #}
+                <span>Vols</span>
+                <span class="tooltip">Vols</span>
+            </a>
+        </li>
+    </ul>
+</aside>
+
+{% endblock %}
+    
+<main id="main-content" class="main-content">
+    {% block body %}{% endblock %}
+</main><!-- End Main -->
+{% block javascripts %}
+        <script src="{{ asset('assetsC/js/core.min.js') }}"></script>
+        <script src="{{ asset('assetsC/js/script.js') }}"></script>  
+        <!-- Vendor JS Files -->
+        <script src="{{ asset('assets/vendor/apexcharts/apexcharts.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/chart.js/chart.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/echarts/echarts.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/quill/quill.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/simple-datatables/simple-datatables.js') }}"></script>
+        <script src="{{ asset('assets/vendor/tinymce/tinymce.min.js') }}"></script>
+        <script src="{{ asset('assets/vendor/php-email-form/validate.js') }}"></script>
+
+        <!-- Template Main JS File -->
+        <script src="{{ asset('assets/js/main.js') }}"></script>    
+        {% endblock %}

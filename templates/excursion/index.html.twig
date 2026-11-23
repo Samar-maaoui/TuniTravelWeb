@@ -1,0 +1,103 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}
+    <div class="container mt-4">
+        <h2 class="mb-4">Liste des excursions</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <style>
+
+
+.button { background-color:rgb(1, 42, 163); } /* Blue */
+    .btn2 { 
+        background-color: #f44336;
+        color: white;
+    } /* Red */
+        .button3 { background-color:orange; } /* Blue */
+
+  color: white;
+} /* Red */
+</style> 
+            {% for excursion in excursions %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        {% if excursion.image %}
+                            <img src="{{ asset('uploads/excursions/' ~ excursion.image) }}" class="card-img-top" alt="Image de l'excursion" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <img src="{{ asset('images/no-image.png') }}" class="card-img-top" alt="Pas d'image" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ excursion.nom }}</h5>
+                            <p class="card-text">
+                                <strong>Destination :</strong> {{ excursion.lieu }}<br>
+                                <strong>Lieu de départ :</strong> {{ excursion.villeDepart }}<br>
+                                <strong>Prix :</strong> {{ excursion.prix }} DT<br>
+                                <strong>Dates :</strong> {{ excursion.dateDepart|date('d/m/Y') }} → {{ excursion.dateRetour|date('d/m/Y') }}<br>
+                                <strong>Guide :</strong> {{ excursion.guide.nom }}<br>
+                                <strong>Participants max :</strong> {{ excursion.nombreMaxParticipants }}<br>
+                            </p>
+                            <p>{{ excursion.description|length > 120 ? excursion.description|slice(0, 120) ~ '...' : excursion.description }}</p>
+                        </div>
+
+                        <div class="btn-group">
+                          
+                            <a href="{{ path('app_excursion_edit', {'id_excursion': excursion.idExcursion}) }}" class="btn button"><i class="fa-solid fa-pen"></i> Modifier</a>
+<button class="btn2" onclick="deleteExcursion({{ excursion.idExcursion }}, '{{ csrf_token('delete' ~ excursion.idExcursion) }}', this)">
+    <i class="fa-solid fa-trash"></i> Supprimer
+</button>
+
+<script>
+    function deleteExcursion(id, token, button) {
+    if (confirm("Voulez-vous vraiment supprimer cette excursion ?")) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/excursion/' + id, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Définir ce qui se passe quand la requête est terminée
+        xhr.onload = function () {
+            if (xhr.status === 200 || xhr.status === 303) {
+                alert('Excursion supprimée avec succès');
+                location.reload();
+            } else {
+                alert('Une erreur est survenue. L\'excursion n\'a pas pu être supprimée.');
+                button.style.backgroundColor = '';
+                button.disabled = false;
+            }
+        };
+
+        // Envoyer la requête avec le token CSRF
+        xhr.send('_token=' + encodeURIComponent(token));
+    } else {
+        button.style.backgroundColor = '';
+        button.disabled = false;
+    }
+}
+
+</script>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">Aucune excursion trouvée.</div>
+                </div>
+            {% endfor %}
+        </div>
+
+      
+        <div class="mt-4 text-end">
+           <center> <a href="{{ path('app_reservations_list') }}" class="btn button3"> <i class="fa-solid fa-list"></i> Consulter les reservations</a></center>
+        </div>
+    </div>
+{% endblock %}

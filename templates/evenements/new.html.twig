@@ -1,0 +1,10 @@
+{% extends 'baseadmin.html.twig' %}
+
+{% block body %}
+    {{ include('evenements/_form.html.twig') }}
+
+    <!-- Return button (icon) in top right corner -->
+    <a href="{{ path('app_evenements_index') }}" class="return-btn">
+        <i class="fas fa-arrow-left"> retour </i> <!-- Left arrow icon -->
+    </a>
+{% endblock %}

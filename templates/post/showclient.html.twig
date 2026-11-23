@@ -1,0 +1,59 @@
+
+
+{% block body %}
+<h1 class="offre-titre">OFFRE EXCLUSIVE</h1>
+<style>
+.offre-titre {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+    position: relative;
+}
+
+.offre-titre::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: #00b894;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+</style>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Titre</th>
+                <td>{{ post.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ post.description }}</td>
+            </tr>
+          <tr>
+                 <th>Date_publication</th>
+                <td>{{ post.datePublication ? post.datePublication|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                <th>Date_expiration</th>
+                <td>{{ post.dateExpiration ? post.dateExpiration|date('Y-m-d') : '' }}</td>
+                </tr>
+
+            <tr>
+                <th>Statut</th>
+                <td>{{ post.statut }}</td>
+            </tr>
+           
+        </tbody>
+    </table>
+
+    <!-- Action Buttons -->
+   
+
+
+{% endblock %}
